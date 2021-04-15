@@ -9,3 +9,6 @@ lint:
 
 webpack:
 	npx webpack.config.js
+
+build:
+	webpack --mode production
