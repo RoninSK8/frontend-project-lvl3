@@ -25,57 +25,63 @@ export default () => {
       field: {
         input: '',
       },
-      input: '',
       valid: true,
       error: '',
     },
     feeds: [],
-    feed: {
-      title: '',
-      description: '',
-      posts: [],
-    },
-  };
-  const displayFeed = (x) => {
-    const feeds = document.querySelector('.feeds');
-    const h2 = document.createElement('h2');
-    h2.innerHTML = 'Фиды';
-    feeds.append(h2);
-    const ul = document.createElement('ul');
-    ul.classList.add('list-group', 'mb-5');
-
-    const currentFeed = x.querySelector('title').innerHTML;
-    const currentFeedDescription = x.querySelector('description').innerHTML;
-
-    ul.innerHTML = `<li class="list-group-item"><h3>${currentFeed}</h3><p>${currentFeedDescription}</p></li>`;
-    feeds.append(ul);
-
-    const posts = document.querySelector('.posts');
-
-    const currentPosts = x.querySelectorAll('item');
-    const currentPostsNum = currentPosts.length;
-    if (currentPostsNum > 0) {
-      const h2 = document.createElement('h2');
-      h2.innerHTML = 'Посты';
-      posts.append(h2);
-      const ul = document.createElement('ul');
-      ul.classList.add('list-group');
-
-      for (let i = 0; i < currentPostsNum; i += 1) {
-        const li = document.createElement('li');
-        li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
-        li.innerHTML = `<a href="${currentPosts[i].getElementsByTagName('link')[0].innerHTML}" class="font-weight-bold" data-id="${i + 1}" target="_blank" rel="noopener noreferrer">${currentPosts[i].getElementsByTagName('title')[0].innerHTML}</a><button type="button" class="btn btn-primary btn-sm" data-id="${i + 1}" data-toggle="modal" data-target="#modal">Просмотр</button>`;
-        posts.append(li);
-      }
-    }
-
-    console.log(x);
+    posts: [],
   };
 
   const form = document.querySelector('form');
   // const submitButton = form.querySelector('[type="submit"]');
   const formField = form.querySelector('.form-control');
   const feedback = document.querySelector('.feedback');
+
+  const renderFeeds = () => {
+    const feeds = document.querySelector('.feeds');
+    feeds.innerHTML = '';
+    if (feeds.length === 0) {
+      return;
+    }
+    const h2 = document.createElement('h2');
+    h2.innerHTML = 'Фиды';
+    feeds.append(h2);
+    const ul = document.createElement('ul');
+    ul.classList.add('list-group', 'mb-5');
+    state.feeds.forEach((feed) => {
+      const feedTitle = feed.title;
+      const feedDescription = feed.description;
+      const li = document.createElement('li');
+      li.classList.add('list-group-item');
+      li.innerHTML = `<h3>${feedTitle}</h3><p>${feedDescription}</p>`;
+      ul.append(li);
+    });
+    feeds.append(ul);
+  };
+  const renderPosts = () => {
+    const posts = document.querySelector('.posts');
+    posts.innerHTML = '';
+    if (posts.length === 0) {
+      return;
+    }
+    const h2 = document.createElement('h2');
+    h2.innerHTML = 'Посты';
+    posts.append(h2);
+    const ul = document.createElement('ul');
+    ul.classList.add('list-group');
+
+    state.posts.forEach((post) => {
+      const { title } = post;
+      // const { description } = post;
+      const { link } = post;
+      console.log(ul);
+      const li = document.createElement('li');
+      li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
+      li.innerHTML = `<a href="${link}" class="font-weight-bold" data-id="" target="_blank" rel="noopener noreferrer">${title}</a><button type="button" class="btn btn-primary btn-sm" data-id="" data-toggle="modal" data-target="#modal">Просмотр</button>`;
+      ul.append(li);
+    });
+    posts.append(ul);
+  };
 
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
@@ -97,8 +103,16 @@ export default () => {
           feedback.innerHTML = 'RSS успешно загружен';
         } else {
           feedback.innerHTML = watchedState.form.error;
-          console.log('отрабаотывает еррор')
+          console.log('отрабаотывает еррор');
         }
+        break;
+
+      case 'feeds':
+        renderFeeds();
+        break;
+
+      case 'posts':
+        renderPosts();
         break;
 
       default:
@@ -140,6 +154,7 @@ export default () => {
     //   break;
     // }
   });
+
   // const loadXml = (url) => {
   //   const proxyUrl = `https://hexlet-allorigins.herokuapp.com/get?&url=${encodeURIComponent(url)}`;
   //   axios.get(proxyUrl)
@@ -158,7 +173,8 @@ export default () => {
   // };
 
   const updateValidationState = () => {
-    if (_.includes(watchedState.feeds, watchedState.form.field.input)) {
+    const feedLinks = state.feeds.map((feed) => feed.link);
+    if (_.includes(feedLinks, watchedState.form.field.input)) {
       watchedState.form.valid = false;
       watchedState.form.error = 'RSS уже существует';
       return;
@@ -174,6 +190,7 @@ export default () => {
     const formData = new FormData(e.target);
     const input = formData.get('url');
     watchedState.form.field.input = input;
+    // console.log(_.uniqueId());
 
     updateValidationState();
 
@@ -185,15 +202,31 @@ export default () => {
           const content = response.data.contents;
           // const parser = new DOMParser();
           // const xml = parser.parseFromString(contents, 'application/xml');
-          const feed = parse(content);
-          watchedState.feeds.push(input);
-          displayFeed(xml);
-          console.log(xml);
+          const feedData = parse(content);
+
+          console.log(feedData);
+
+          const feedLink = watchedState.form.field.input;
+          const feedTitle = feedData.feed.title;
+          const feedDescription = feedData.feed.description;
+          const newFeed = {
+            link: feedLink,
+            title: feedTitle,
+            description: feedDescription,
+          };
+          watchedState.feeds = [newFeed].concat(watchedState.feeds);
+
+          const newPosts = feedData.feed.posts;
+          watchedState.posts = newPosts.concat(watchedState.posts);
+
+          console.log(state);
+          // watchedState.feeds.push(input);
+          // displayFeed(xml);
         })
         .catch((err) => {
           watchedState.form.error = err.message;
           watchedState.form.valid = false;
-          console.log(watchedState.form.error)
+          console.log(watchedState.form.error);
         });
 
       // const feedData = parseXml(xml);
