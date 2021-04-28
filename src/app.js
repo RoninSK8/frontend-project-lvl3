@@ -1,8 +1,10 @@
+import i18n from 'i18next';
 import * as yup from 'yup';
 import axios from 'axios';
 import _ from 'lodash';
 import parse from './parser.js';
 import watch from './view.js';
+import resources from './locales';
 
 const schema = yup.object().shape({
   input: yup.string().url(),
