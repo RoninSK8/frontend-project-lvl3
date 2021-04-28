@@ -1,6 +1,10 @@
 import onChange from 'on-change';
 import _ from 'lodash';
 
+const formField = document.querySelector('.form-control');
+const feedback = document.querySelector('.feedback');
+// const submitButton = document.querySelector('[type="submit"]');
+
 const renderPosts = (state) => {
   const posts = document.querySelector('.posts');
   posts.innerHTML = '';
@@ -47,31 +51,39 @@ const renderFeeds = (state) => {
   });
   feeds.append(ul);
 };
-export default (state) => {
-  const formField = document.querySelector('.form-control');
-  const feedback = document.querySelector('.feedback');
+
+const renderErrors = (state, i18nInstance) => {
+  if (_.isEqual(state.form.error, {})) {
+    feedback.innerText = i18nInstance.t('feedback.successfullyLoaded');
+  } else {
+    feedback.innerText = state.form.error;
+  }
+};
+
+const renderForm = (value) => {
+  if (value === true) {
+    formField.classList.remove('is-invalid');
+
+    feedback.classList.remove('text-danger');
+    feedback.classList.add('text-success');
+  }
+  if (value === false) {
+    formField.classList.add('is-invalid');
+
+    feedback.classList.remove('text-success');
+    feedback.classList.add('text-danger');
+  }
+};
+
+export default (state, i18nInstance) => {
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
       case 'form.valid':
-        if (value === true) {
-          formField.classList.remove('is-invalid');
-          feedback.classList.remove('text-success', 'text-danger');
-          feedback.classList.add('text-success');
-          // feedback.innerText = 'RSS успешно загружен';
-        }
-        if (value === false) {
-          formField.classList.add('is-invalid');
-          feedback.classList.add('text-danger');
-        }
+        renderForm(value);
         break;
 
       case 'form.error':
-        if (_.isEqual(watchedState.form.error, {})) {
-          feedback.innerText = 'RSS успешно загружен';
-        } else {
-          feedback.innerHTML = watchedState.form.error;
-          console.log('отрабаотывает еррор');
-        }
+        renderErrors(state, i18nInstance);
         break;
 
       case 'feeds':
@@ -86,40 +98,10 @@ export default (state) => {
         break;
     }
 
-    if (value === true) {
-      formField.classList.remove('is-invalid');
-      feedback.classList.remove('text-success', 'text-danger');
-      feedback.classList.add('text-success');
-      feedback.innerHTML = 'RSS успешно загружен';
-    }
-    if (value === false) {
-      formField.classList.add('is-invalid');
-      feedback.classList.add('text-danger');
-      feedback.textContent = state.form.error;
-      // console.log(form.error)
-    }
     // switch (path) {
     // case 'form.processState':
     //   processStateHandler(value);
     //   break;
-    // case 'form.valid':
-    //   if (value === true) {
-    //     feedback.classList.remove('.text-success', '.text-danger');
-    //     feedback.classList.add('.text-success');
-    //     feedback.innerHTML = 'RSS успешно загружен';
-    //   }
-    //   if (value === false) {
-    //     feedback.classList.add('.text-danger');
-    //     feedback.innerHTML = 'Ссылка должна быть валидным URL';
-    //   }
-    //   submitButton.disabled = !value;
-    //   break;
-    // case 'form.errors':
-    //   renderErrors(fieldElements, value);
-    //   break;
-    // default:
-    //   break;
-    // }
   });
   return watchedState;
 };
