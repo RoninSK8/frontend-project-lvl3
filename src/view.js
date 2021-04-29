@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const formField = document.querySelector('.form-control');
 const feedback = document.querySelector('.feedback');
-// const submitButton = document.querySelector('[type="submit"]');
+const submitButton = document.querySelector('[type="submit"]');
 
 const renderPosts = (state) => {
   const posts = document.querySelector('.posts');
@@ -54,9 +54,9 @@ const renderFeeds = (state) => {
 
 const renderErrors = (state, i18nInstance) => {
   if (_.isEqual(state.form.error, {})) {
-    feedback.innerText = i18nInstance.t('feedback.successfullyLoaded');
+    feedback.innerText = '';
   } else {
-    feedback.innerText = state.form.error;
+    feedback.innerText = i18nInstance.t(state.form.error);
   }
 };
 
@@ -75,9 +75,33 @@ const renderForm = (value) => {
   }
 };
 
+const processStateHandler = (processState, i18nInstance) => {
+  switch (processState) {
+    case 'failed':
+      submitButton.disabled = false;
+      break;
+    case 'filling':
+      submitButton.disabled = false;
+      break;
+    case 'sending':
+      submitButton.disabled = true;
+      break;
+    case 'finished':
+      submitButton.disabled = false;
+      feedback.innerText = i18nInstance.t('feedback.successfullyLoaded');
+      break;
+    default:
+      throw new Error(`Unknown state: ${processState}`);
+  }
+};
+
 export default (state, i18nInstance) => {
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
+      case 'form.processState':
+        processStateHandler(value, i18nInstance);
+        break;
+
       case 'form.valid':
         renderForm(value);
         break;
@@ -97,11 +121,6 @@ export default (state, i18nInstance) => {
       default:
         break;
     }
-
-    // switch (path) {
-    // case 'form.processState':
-    //   processStateHandler(value);
-    //   break;
   });
   return watchedState;
 };
