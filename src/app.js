@@ -15,25 +15,6 @@ export default () => {
     resources,
   })
     .then(() => {
-      yup.setLocale({
-        string: {
-          required: i18nInstance.t('feedback.fieldRequired'),
-          url: i18nInstance.t('feedback.urlNotValid'),
-        },
-      });
-
-      const schema = yup.object().shape({
-        input: yup.string().required().url(),
-      });
-
-      const validate = (fields) => {
-        try {
-          schema.validateSync(fields, { abortEarly: false });
-          return {};
-        } catch (e) {
-          return e.message;
-        }
-      };
       const state = {
         form: {
           processState: 'filling',
@@ -48,6 +29,27 @@ export default () => {
         posts: [],
       };
 
+      yup.setLocale({
+        string: {
+          required: 'feedback.fieldRequired',
+          url: 'feedback.urlNotValid',
+          notOneOf: 'feedback.alreadyExists',
+        },
+      });
+
+      const schema = yup.object().shape({
+        input: yup.string().required().url().notOneOf(state.feeds.map((feed) => feed.link)),
+      });
+
+      const validate = (fields) => {
+        try {
+          schema.validateSync(fields, { abortEarly: false });
+          return {};
+        } catch (e) {
+          return e.message;
+        }
+      };
+
       const form = document.querySelector('form');
       // const submitButton = form.querySelector('[type="submit"]');
       // const formField = form.querySelector('.form-control');
@@ -56,15 +58,18 @@ export default () => {
       const watchedState = watch(state, i18nInstance);
 
       const updateValidationState = () => {
-        const feedLinks = state.feeds.map((feed) => feed.link);
-        if (_.includes(feedLinks, watchedState.form.field.input)) {
-          watchedState.form.valid = false;
-          watchedState.form.error = i18nInstance.t('feedback.alreadyExists');
-        } else {
-          const errors = validate(watchedState.form.field);
-          watchedState.form.valid = _.isEqual(errors, {});
-          watchedState.form.error = errors;
-        }
+        const errors = validate(watchedState.form.field);
+        watchedState.form.valid = _.isEqual(errors, {});
+        watchedState.form.error = errors;
+        // const feedLinks = state.feeds.map((feed) => feed.link);
+        // if (_.includes(feedLinks, watchedState.form.field.input)) {
+        //   watchedState.form.valid = false;
+        //   watchedState.form.error = 'feedback.alreadyExists';
+        // } else {
+        //   const errors = validate(watchedState.form.field);
+        //   watchedState.form.valid = _.isEqual(errors, {});
+        //   watchedState.form.error = errors;
+        // }
       };
 
       form.addEventListener('submit', async (e) => {
@@ -74,14 +79,19 @@ export default () => {
         watchedState.form.field.input = input;
 
         updateValidationState();
-
         if (watchedState.form.valid) {
+          watchedState.form.processState = 'sending';
           const url = new URL(input);
           const proxyUrl = `https://hexlet-allorigins.herokuapp.com/get?&url=${encodeURIComponent(url)}`;
           axios.get(proxyUrl)
             .then((response) => {
               const content = response.data.contents;
-              const feedData = parse(content);
+              let feedData;
+              try {
+                feedData = parse(content);
+              } catch (err) {
+                throw new Error(err.message);
+              }
 
               console.log(feedData);
 
@@ -97,13 +107,25 @@ export default () => {
 
               const newPosts = feedData.feed.posts;
               watchedState.posts = newPosts.concat(watchedState.posts);
+              watchedState.form.processState = 'finished';
 
               console.log(state);
               // watchedState.feeds.push(input);
               // displayFeed(xml);
             })
             .catch((err) => {
-              watchedState.form.error = err.message;
+              watchedState.form.processState = 'failed';
+              switch (err.message) {
+                case 'Error parsing XML':
+                  watchedState.form.error = 'feedback.rssParsingError';
+                  break;
+                case 'Network Error':
+                  watchedState.form.error = 'feedback.networkError';
+                  break;
+                default:
+                  break;
+              }
+              // watchedState.form.error = err.message;
               watchedState.form.valid = false;
               console.log(watchedState.form.error);
             });
