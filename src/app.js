@@ -33,13 +33,15 @@ export default () => {
         string: {
           required: 'feedback.fieldRequired',
           url: 'feedback.urlNotValid',
-          notOneOf: 'feedback.alreadyExists',
         },
       });
-
-      const schema = yup.object().shape({
-        input: yup.string().required().url().notOneOf(state.feeds.map((feed) => feed.link)),
-      });
+      let schema;
+      const initializeSchema = () => {
+        const feedLinks = state.feeds.map((feed) => feed.link);
+        schema = yup.object().shape({
+          input: yup.string().required().url().notOneOf(feedLinks, 'feedback.alreadyExists'),
+        });
+      };
 
       const validate = (fields) => {
         try {
@@ -61,15 +63,6 @@ export default () => {
         const errors = validate(watchedState.form.field);
         watchedState.form.valid = _.isEqual(errors, {});
         watchedState.form.error = errors;
-        // const feedLinks = state.feeds.map((feed) => feed.link);
-        // if (_.includes(feedLinks, watchedState.form.field.input)) {
-        //   watchedState.form.valid = false;
-        //   watchedState.form.error = 'feedback.alreadyExists';
-        // } else {
-        //   const errors = validate(watchedState.form.field);
-        //   watchedState.form.valid = _.isEqual(errors, {});
-        //   watchedState.form.error = errors;
-        // }
       };
 
       form.addEventListener('submit', async (e) => {
@@ -77,7 +70,7 @@ export default () => {
         const formData = new FormData(e.target);
         const input = formData.get('url');
         watchedState.form.field.input = input;
-
+        initializeSchema();
         updateValidationState();
         if (watchedState.form.valid) {
           watchedState.form.processState = 'sending';
