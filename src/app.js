@@ -51,6 +51,7 @@ export default () => {
           return e.message;
         }
       };
+      const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
       const form = document.querySelector('form');
       // const submitButton = form.querySelector('[type="submit"]');
@@ -64,16 +65,40 @@ export default () => {
         watchedState.form.valid = _.isEqual(errors, {});
         watchedState.form.error = errors;
       };
-      // const checkFeedsForUpdates = () => {
-      //   const feedList = state.feeds.map((feed) => feed.link);
-      //   feedList.map((link) => {
-      //     axios.get(proxyUrl)
-      //       .then()
-      //   })
+      const checkFeedsForUpdates = () => {
+        const { feeds } = state;
+        const promises = feeds.forEach((feed) => {
+          const feedId = feed.id;
+          const feedLink = proxifyUrl(feed.link);
+          axios.get(feedLink)
+            .then((response) => {
+              const content = response.data.contents;
+              let feedData;
+              try {
+                feedData = parse(content);
+              } catch (err) {
+                throw new Error(err.message);
+              }
+              const updatedPosts = feedData.feed.posts;
+              const updatedPostsTitles = updatedPosts.map((post) => post.title);
+              const currentPosts = state.posts.filter((post) => post.id === feedId);
+              const currentPostsTitles = currentPosts.map((post) => post.title);
+              const newPostTitles = _.difference(updatedPostsTitles, currentPostsTitles);
+              if (newPostTitles.length > 0) {
+                console.log(newPostTitles);
+                newPostTitles.forEach((title) => {
+                  updatedPosts.filter((post) => post.title === title);
+                });
+                watchedState.posts = updatedPosts.concat(watchedState.posts);
+              }
+            })
+            .then(() => setTimeout(checkFeedsForUpdates, 5000))
+            .catch(() => {});
+        });
+        return promises;
+      };
 
-      //   setTimeout(checkFeedsForUpdates, 5000);
-      // };
-      form.addEventListener('submit', async (e) => {
+      form.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const input = formData.get('url');
@@ -82,9 +107,8 @@ export default () => {
         updateValidationState();
         if (watchedState.form.valid) {
           watchedState.form.processState = 'sending';
-          const url = new URL(input);
-          const proxyUrl = `https://hexlet-allorigins.herokuapp.com/get?&url=${encodeURIComponent(url)}`;
-          axios.get(proxyUrl)
+          const url = proxifyUrl(new URL(input));
+          axios.get(url)
             .then((response) => {
               const content = response.data.contents;
               let feedData;
@@ -134,6 +158,7 @@ export default () => {
               console.log(watchedState.form.error);
             });
         }
+        setTimeout(checkFeedsForUpdates, 5000);
       });
     });
 };
