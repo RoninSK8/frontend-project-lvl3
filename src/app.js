@@ -64,7 +64,15 @@ export default () => {
         watchedState.form.valid = _.isEqual(errors, {});
         watchedState.form.error = errors;
       };
+      // const checkFeedsForUpdates = () => {
+      //   const feedList = state.feeds.map((feed) => feed.link);
+      //   feedList.map((link) => {
+      //     axios.get(proxyUrl)
+      //       .then()
+      //   })
 
+      //   setTimeout(checkFeedsForUpdates, 5000);
+      // };
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -95,16 +103,19 @@ export default () => {
                 link: feedLink,
                 title: feedTitle,
                 description: feedDescription,
+                id: _.uniqueId(),
               };
+              const feedId = newFeed.id;
               watchedState.feeds = [newFeed].concat(watchedState.feeds);
 
               const newPosts = feedData.feed.posts;
+              newPosts.forEach((post) => {
+                post.id = feedId;
+              });
               watchedState.posts = newPosts.concat(watchedState.posts);
               watchedState.form.processState = 'finished';
 
               console.log(state);
-              // watchedState.feeds.push(input);
-              // displayFeed(xml);
             })
             .catch((err) => {
               watchedState.form.processState = 'failed';
@@ -122,13 +133,7 @@ export default () => {
               watchedState.form.valid = false;
               console.log(watchedState.form.error);
             });
-
-          // const feedData = parseXml(xml);
-          // watchedState.feed = feedData;
         }
-        // console.log(state);
-        // watchedState.form.errors = errors;
-        // watchedState.form.processState = 'sending';
       });
     });
 };
