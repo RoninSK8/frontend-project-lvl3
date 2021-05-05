@@ -9,8 +9,11 @@ export default {
       rssParsingError: 'Ресурс не содержит валидный RSS',
       networkError: 'Ошибка сети',
     },
+    modal: {
+      readFull: 'Читать полностью',
+      close: 'Закрыть',
+    },
     watchButton: 'Просмотр',
-
   },
 };
 
