@@ -5,7 +5,7 @@ const formField = document.querySelector('.form-control');
 const feedback = document.querySelector('.feedback');
 const submitButton = document.querySelector('[type="submit"]');
 
-const renderPosts = (state) => {
+const renderPosts = (state, i18nInstance) => {
   const posts = document.querySelector('.posts');
   posts.innerHTML = '';
   if (posts.length === 0) {
@@ -21,10 +21,25 @@ const renderPosts = (state) => {
     const { title } = post;
     // const { description } = post;
     const { link } = post;
-    console.log(ul);
+    const { id } = post;
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
-    li.innerHTML = `<a href="${link}" class="font-weight-bold" data-id="" target="_blank" rel="noopener noreferrer">${title}</a><button type="button" class="btn btn-primary btn-sm" data-id="" data-toggle="modal" data-target="#modal">Просмотр</button>`;
+    const a = document.createElement('a');
+    a.setAttribute('href', `${link}`);
+    a.classList.add('font-weight-bold');
+    a.setAttribute('data-id', id);
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+    a.innerText = title;
+    li.append(a);
+    const button = document.createElement('button');
+    button.classList.add('btn', 'btn-primary', 'btn-sm');
+    button.setAttribute('type', 'button');
+    button.setAttribute('data-id', 'button');
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', 'modal');
+    button.innerText = i18nInstance.t('watchButton');
+    li.append(button);
     ul.append(li);
   });
   posts.append(ul);
@@ -115,7 +130,7 @@ export default (state, i18nInstance) => {
         break;
 
       case 'posts':
-        renderPosts(state);
+        renderPosts(state, i18nInstance);
         break;
 
       default:
