@@ -154,7 +154,6 @@ export default (state, i18nInstance) => {
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
       case 'watchedPosts':
-        console.log('watchedPosts render triggered');
         renderWatchedStatuses(watchedState);
         break;
       case 'modalWindowPostId':
