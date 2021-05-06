@@ -14,6 +14,8 @@ export default {
       close: 'Закрыть',
     },
     watchButton: 'Просмотр',
+    feeds: 'Фиды',
+    posts: 'Посты',
   },
 };
 

@@ -11,6 +11,36 @@ const modalHandler = (watchedState, id) => {
   watchedState.watchedPosts = [id].concat(watchedState.watchedPosts);
 };
 
+const closeModal = (watchedState) => {
+  watchedState.modalWindowPostId = null;
+};
+
+const renderModal = (watchedState, i18nInstance) => {
+  const postId = watchedState.modalWindowPostId;
+
+  const currentPost = watchedState.posts.filter((post) => post.uniqueId === postId)[0];
+  const modalTitle = modalForm.querySelector('.modal-title');
+  const modalDescription = modalForm.querySelector('.modal-body');
+  const goToFullArticleButton = modalForm.querySelector('.full-article');
+  const closeModalButton = modalForm.querySelector('[class="btn btn-secondary"]');
+  const xCloseButton = modalForm.querySelector('[class="close"]');
+
+  if (postId) {
+    modalForm.classList.add('show');
+    modalForm.setAttribute('style', 'padding-right: 17px; display: block;');
+    modalTitle.innerText = currentPost.title;
+    modalDescription.innerText = currentPost.description;
+    goToFullArticleButton.innerText = i18nInstance.t('modal.readFull');
+    goToFullArticleButton.setAttribute('href', currentPost.link);
+    closeModalButton.innerText = i18nInstance.t('modal.close');
+    closeModalButton.addEventListener('click', () => closeModal(watchedState));
+    xCloseButton.addEventListener('click', () => closeModal(watchedState));
+  } else {
+    modalForm.classList.remove('show');
+    modalForm.removeAttribute('style');
+  }
+};
+
 const renderWatchedStatuses = (watchedState) => {
   watchedState.posts.forEach((post) => {
     if (_.includes(watchedState.watchedPosts, post.uniqueId)) {
@@ -28,16 +58,12 @@ const renderPosts = (watchedState, i18nInstance) => {
     return;
   }
   const h2 = document.createElement('h2');
-  h2.innerHTML = 'Посты';
+  h2.innerHTML = i18nInstance.t('posts');
   posts.append(h2);
   const ul = document.createElement('ul');
   ul.classList.add('list-group');
-
   watchedState.posts.forEach((post) => {
-    const { title } = post;
-    // const { description } = post;
-    const { link } = post;
-    const { uniqueId } = post;
+    const { title, link, uniqueId } = post;
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
     const a = document.createElement('a');
@@ -46,7 +72,6 @@ const renderPosts = (watchedState, i18nInstance) => {
     a.setAttribute('data-id', uniqueId);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
-    a.setAttribute('text-decoration', 'none');
     a.innerText = title;
     li.append(a);
     const button = document.createElement('button');
@@ -63,47 +88,14 @@ const renderPosts = (watchedState, i18nInstance) => {
   posts.append(ul);
 };
 
-const renderModal = (watchedState, i18nInstance) => {
-  const postId = watchedState.modalWindowPostId;
-
-  const currentPost = watchedState.posts.filter((post) => post.uniqueId === postId)[0];
-  const modalTitle = modalForm.querySelector('.modal-title');
-  const modalDescription = modalForm.querySelector('.modal-body');
-  const goToFullArticleButton = modalForm.querySelector('.full-article');
-  const closeModalButton = modalForm.querySelector('[class="btn btn-secondary"]');
-  closeModalButton.addEventListener('click', () => {
-    modalForm.classList.remove('show');
-  });
-
-  if (postId) {
-    modalForm.classList.add('show');
-    modalForm.setAttribute('style', 'padding-right: 17px; display: block;');
-    modalTitle.innerText = currentPost.title;
-    modalDescription.innerText = currentPost.description;
-    goToFullArticleButton.innerText = i18nInstance.t('modal.readFull');
-    goToFullArticleButton.setAttribute('href', currentPost.link);
-    closeModalButton.innerText = i18nInstance.t('modal.close');
-    closeModalButton.addEventListener('click', () => {
-      watchedState.modalWindowPostId = null;
-    });
-  } else {
-    modalForm.classList.remove('show');
-    modalForm.removeAttribute('style');
-  }
-};
-
-// const closeModal = (watchedState) => {
-//   modalForm.classList.remove('show');
-// }
-
-const renderFeeds = (state) => {
+const renderFeeds = (state, i18nInstance) => {
   const feeds = document.querySelector('.feeds');
   feeds.innerHTML = '';
   if (feeds.length === 0) {
     return;
   }
   const h2 = document.createElement('h2');
-  h2.innerHTML = 'Фиды';
+  h2.innerHTML = i18nInstance.t('feeds');
   feeds.append(h2);
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'mb-5');
@@ -129,13 +121,10 @@ const renderErrors = (state, i18nInstance) => {
 const renderForm = (value) => {
   if (value === true) {
     formField.classList.remove('is-invalid');
-
     feedback.classList.remove('text-danger');
     feedback.classList.add('text-success');
-  }
-  if (value === false) {
+  } else {
     formField.classList.add('is-invalid');
-
     feedback.classList.remove('text-success');
     feedback.classList.add('text-danger');
   }
@@ -174,23 +163,18 @@ export default (state, i18nInstance) => {
       case 'form.processState':
         processStateHandler(value, i18nInstance);
         break;
-
       case 'form.valid':
         renderForm(value);
         break;
-
       case 'form.error':
         renderErrors(state, i18nInstance);
         break;
-
       case 'feeds':
-        renderFeeds(state);
+        renderFeeds(state, i18nInstance);
         break;
-
       case 'posts':
         renderPosts(watchedState, i18nInstance);
         break;
-
       default:
         break;
     }

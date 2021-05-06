@@ -56,9 +56,6 @@ export default () => {
       const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
       const form = document.querySelector('form');
-      // const submitButton = form.querySelector('[type="submit"]');
-      // const formField = form.querySelector('.form-control');
-      // const feedback = document.querySelector('.feedback');
 
       const watchedState = watch(state, i18nInstance);
 
@@ -87,7 +84,6 @@ export default () => {
               const currentPostsTitles = currentPosts.map((post) => post.title);
               const newPostTitles = _.difference(updatedPostsTitles, currentPostsTitles);
               if (newPostTitles.length > 0) {
-                console.log(newPostTitles);
                 newPostTitles.forEach((title) => {
                   updatedPosts.filter((post) => post.title === title);
                 });
@@ -119,9 +115,6 @@ export default () => {
               } catch (err) {
                 throw new Error(err.message);
               }
-
-              console.log(feedData);
-
               const feedLink = watchedState.form.field.input;
               const feedTitle = feedData.feed.title;
               const feedDescription = feedData.feed.description;
@@ -133,7 +126,6 @@ export default () => {
               };
               const feedId = newFeed.id;
               watchedState.feeds = [newFeed].concat(watchedState.feeds);
-
               const newPosts = feedData.feed.posts;
               newPosts.forEach((post) => {
                 post.feedId = feedId;
@@ -141,8 +133,6 @@ export default () => {
               });
               watchedState.posts = newPosts.concat(watchedState.posts);
               watchedState.form.processState = 'finished';
-
-              console.log(state);
             })
             .catch((err) => {
               watchedState.form.processState = 'failed';
