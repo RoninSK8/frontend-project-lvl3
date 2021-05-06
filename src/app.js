@@ -56,8 +56,11 @@ export default () => {
       const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
       const form = document.querySelector('form');
-
-      const watchedState = watch(state, i18nInstance);
+      const formField = document.querySelector('.rss-form');
+      const feedback = document.querySelector('.feedback');
+      const submitButton = document.querySelector('[type="submit"]');
+      const modalForm = document.querySelector('#modal');
+      const watchedState = watch(state, i18nInstance, formField, feedback, submitButton, modalForm);
 
       const updateValidationState = () => {
         const errors = validate(watchedState.form.field);

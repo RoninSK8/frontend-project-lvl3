@@ -1,11 +1,6 @@
 import onChange from 'on-change';
 import _ from 'lodash';
 
-const formField = document.querySelector('.rss-form');
-const feedback = document.querySelector('.feedback');
-const submitButton = document.querySelector('[type="submit"]');
-const modalForm = document.querySelector('#modal');
-
 const modalHandler = (watchedState, id) => {
   watchedState.modalWindowPostId = id;
   watchedState.watchedPosts = [id].concat(watchedState.watchedPosts);
@@ -15,7 +10,7 @@ const closeModal = (watchedState) => {
   watchedState.modalWindowPostId = null;
 };
 
-const renderModal = (watchedState, i18nInstance) => {
+const renderModal = (watchedState, i18nInstance, modalForm) => {
   const postId = watchedState.modalWindowPostId;
 
   const currentPost = watchedState.posts.filter((post) => post.uniqueId === postId)[0];
@@ -110,7 +105,7 @@ const renderFeeds = (state, i18nInstance) => {
   feeds.append(ul);
 };
 
-const renderErrors = (state, i18nInstance) => {
+const renderErrors = (state, i18nInstance, feedback) => {
   if (_.isEqual(state.form.error, {})) {
     feedback.innerText = '';
   } else {
@@ -118,7 +113,7 @@ const renderErrors = (state, i18nInstance) => {
   }
 };
 
-const renderForm = (value) => {
+const renderForm = (value, formField, feedback) => {
   if (value === true) {
     formField.classList.remove('is-invalid');
     feedback.classList.remove('text-danger');
@@ -130,7 +125,7 @@ const renderForm = (value) => {
   }
 };
 
-const processStateHandler = (processState, i18nInstance) => {
+const processStateHandler = (processState, i18nInstance, submitButton, feedback) => {
   switch (processState) {
     case 'failed':
       submitButton.disabled = false;
@@ -150,23 +145,23 @@ const processStateHandler = (processState, i18nInstance) => {
   }
 };
 
-export default (state, i18nInstance) => {
+export default (state, i18nInstance, formField, feedback, submitButton, modalForm) => {
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
       case 'watchedPosts':
         renderWatchedStatuses(watchedState);
         break;
       case 'modalWindowPostId':
-        renderModal(watchedState, i18nInstance);
+        renderModal(watchedState, i18nInstance, modalForm);
         break;
       case 'form.processState':
-        processStateHandler(value, i18nInstance);
+        processStateHandler(value, i18nInstance, submitButton, feedback);
         break;
       case 'form.valid':
-        renderForm(value);
+        renderForm(value, formField, feedback);
         break;
       case 'form.error':
-        renderErrors(state, i18nInstance);
+        renderErrors(state, i18nInstance, feedback);
         break;
       case 'feeds':
         renderFeeds(state, i18nInstance);
