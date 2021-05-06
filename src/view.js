@@ -4,8 +4,17 @@ import _ from 'lodash';
 const formField = document.querySelector('.form-control');
 const feedback = document.querySelector('.feedback');
 const submitButton = document.querySelector('[type="submit"]');
+const modalForm = document.querySelector('#modal');
 
-const renderPosts = (state, i18nInstance) => {
+const modalHandler = (watchedState, id) => {
+  watchedState.modalWindowPostId = id;
+  // watchedState.watchedPosts = watchedState.watchedPosts.push(id);
+  // // watchedState.watchedPosts = watchedState.watchedPosts.push(id);
+  // console.log(id)
+  // console.log(watchedState)
+};
+
+const renderPosts = (watchedState, i18nInstance) => {
   const posts = document.querySelector('.posts');
   posts.innerHTML = '';
   if (posts.length === 0) {
@@ -17,17 +26,17 @@ const renderPosts = (state, i18nInstance) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group');
 
-  state.posts.forEach((post) => {
+  watchedState.posts.forEach((post) => {
     const { title } = post;
     // const { description } = post;
     const { link } = post;
-    const { id } = post;
+    const { uniqueId } = post;
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
     const a = document.createElement('a');
     a.setAttribute('href', `${link}`);
     a.classList.add('font-weight-bold');
-    a.setAttribute('data-id', id);
+    a.setAttribute('data-id', uniqueId);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
     a.innerText = title;
@@ -39,11 +48,45 @@ const renderPosts = (state, i18nInstance) => {
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', 'modal');
     button.innerText = i18nInstance.t('watchButton');
+    button.addEventListener('click', () => modalHandler(watchedState, uniqueId));
     li.append(button);
     ul.append(li);
   });
   posts.append(ul);
 };
+
+const renderModal = (watchedState, i18nInstance) => {
+  const postId = watchedState.modalWindowPostId;
+
+  const currentPost = watchedState.posts.filter((post) => post.uniqueId === postId)[0];
+  const modalTitle = modalForm.querySelector('.modal-title');
+  const modalDescription = modalForm.querySelector('.modal-body');
+  const goToFullArticleButton = modalForm.querySelector('.full-article');
+  const closeModalButton = modalForm.querySelector('[class="btn btn-secondary"]');
+  closeModalButton.addEventListener('click', () => {
+    modalForm.classList.remove('show');
+  });
+
+  if (postId) {
+    modalForm.classList.add('show');
+    modalForm.setAttribute('style', 'padding-right: 17px; display: block;');
+    modalTitle.innerText = currentPost.title;
+    modalDescription.innerText = currentPost.description;
+    goToFullArticleButton.innerText = i18nInstance.t('modal.readFull');
+    goToFullArticleButton.setAttribute('href', currentPost.link);
+    closeModalButton.innerText = i18nInstance.t('modal.close');
+    closeModalButton.addEventListener('click', () => {
+      watchedState.modalWindowPostId = null;
+    });
+  } else {
+    modalForm.classList.remove('show');
+    modalForm.removeAttribute('style');
+  }
+};
+
+// const closeModal = (watchedState) => {
+//   modalForm.classList.remove('show');
+// }
 
 const renderFeeds = (state) => {
   const feeds = document.querySelector('.feeds');
@@ -113,6 +156,10 @@ const processStateHandler = (processState, i18nInstance) => {
 export default (state, i18nInstance) => {
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
+      case 'modalWindowPostId':
+        console.log('modalWindowPostId');
+        renderModal(watchedState, i18nInstance);
+        break;
       case 'form.processState':
         processStateHandler(value, i18nInstance);
         break;
@@ -130,7 +177,7 @@ export default (state, i18nInstance) => {
         break;
 
       case 'posts':
-        renderPosts(state, i18nInstance);
+        renderPosts(watchedState, i18nInstance);
         break;
 
       default:

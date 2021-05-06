@@ -27,6 +27,8 @@ export default () => {
         },
         feeds: [],
         posts: [],
+        modalWindowPostId: null,
+        watchedPosts: [],
       };
 
       yup.setLocale({
@@ -81,7 +83,7 @@ export default () => {
               }
               const updatedPosts = feedData.feed.posts;
               const updatedPostsTitles = updatedPosts.map((post) => post.title);
-              const currentPosts = state.posts.filter((post) => post.id === feedId);
+              const currentPosts = state.posts.filter((post) => post.feedId === feedId);
               const currentPostsTitles = currentPosts.map((post) => post.title);
               const newPostTitles = _.difference(updatedPostsTitles, currentPostsTitles);
               if (newPostTitles.length > 0) {
@@ -134,7 +136,8 @@ export default () => {
 
               const newPosts = feedData.feed.posts;
               newPosts.forEach((post) => {
-                post.id = feedId;
+                post.feedId = feedId;
+                post.uniqueId = _.uniqueId();
               });
               watchedState.posts = newPosts.concat(watchedState.posts);
               watchedState.form.processState = 'finished';
@@ -153,7 +156,6 @@ export default () => {
                 default:
                   break;
               }
-              // watchedState.form.error = err.message;
               watchedState.form.valid = false;
               console.log(watchedState.form.error);
             });
