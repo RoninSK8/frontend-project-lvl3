@@ -1,7 +1,7 @@
 import onChange from 'on-change';
 import _ from 'lodash';
 
-const formField = document.querySelector('.form-control');
+const formField = document.querySelector('.rss-form');
 const feedback = document.querySelector('.feedback');
 const submitButton = document.querySelector('[type="submit"]');
 const modalForm = document.querySelector('#modal');
