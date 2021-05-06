@@ -134,8 +134,8 @@ export default () => {
                 post.feedId = feedId;
                 post.uniqueId = _.uniqueId();
               });
-              watchedState.posts = newPosts.concat(watchedState.posts);
               watchedState.form.processState = 'finished';
+              watchedState.posts = newPosts.concat(watchedState.posts);
             })
             .catch((err) => {
               watchedState.form.processState = 'failed';

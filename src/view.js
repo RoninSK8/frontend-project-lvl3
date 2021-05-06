@@ -137,8 +137,8 @@ const processStateHandler = (processState, i18nInstance, submitButton, feedback)
       submitButton.disabled = true;
       break;
     case 'finished':
+      feedback.innerHTML = i18nInstance.t('feedback.successfullyLoaded');
       submitButton.disabled = false;
-      feedback.innerText = i18nInstance.t('feedback.successfullyLoaded');
       break;
     default:
       throw new Error(`Unknown state: ${processState}`);
