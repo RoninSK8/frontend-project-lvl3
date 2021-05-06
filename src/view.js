@@ -8,10 +8,17 @@ const modalForm = document.querySelector('#modal');
 
 const modalHandler = (watchedState, id) => {
   watchedState.modalWindowPostId = id;
-  // watchedState.watchedPosts = watchedState.watchedPosts.push(id);
-  // // watchedState.watchedPosts = watchedState.watchedPosts.push(id);
-  // console.log(id)
-  // console.log(watchedState)
+  watchedState.watchedPosts = [id].concat(watchedState.watchedPosts);
+};
+
+const renderWatchedStatuses = (watchedState) => {
+  watchedState.posts.forEach((post) => {
+    if (_.includes(watchedState.watchedPosts, post.uniqueId)) {
+      const currentPost = document.querySelector(`[data-id="${post.uniqueId}"]`);
+      currentPost.classList.remove('font-weight-bold');
+      currentPost.classList.add('font-weight-normal');
+    }
+  });
 };
 
 const renderPosts = (watchedState, i18nInstance) => {
@@ -39,6 +46,7 @@ const renderPosts = (watchedState, i18nInstance) => {
     a.setAttribute('data-id', uniqueId);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
+    a.setAttribute('text-decoration', 'none');
     a.innerText = title;
     li.append(a);
     const button = document.createElement('button');
@@ -156,8 +164,11 @@ const processStateHandler = (processState, i18nInstance) => {
 export default (state, i18nInstance) => {
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
+      case 'watchedPosts':
+        console.log('watchedPosts render triggered');
+        renderWatchedStatuses(watchedState);
+        break;
       case 'modalWindowPostId':
-        console.log('modalWindowPostId');
         renderModal(watchedState, i18nInstance);
         break;
       case 'form.processState':
