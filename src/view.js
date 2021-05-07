@@ -23,11 +23,11 @@ const renderModal = (watchedState, i18nInstance, modalForm) => {
   if (postId) {
     modalForm.classList.add('show');
     modalForm.setAttribute('style', 'padding-right: 17px; display: block;');
-    modalTitle.innerText = currentPost.title;
-    modalDescription.innerText = currentPost.description;
-    goToFullArticleButton.innerText = i18nInstance.t('modal.readFull');
+    modalTitle.textContent = currentPost.title;
+    modalDescription.textContent = currentPost.description;
+    goToFullArticleButton.textContent = i18nInstance.t('modal.readFull');
     goToFullArticleButton.setAttribute('href', currentPost.link);
-    closeModalButton.innerText = i18nInstance.t('modal.close');
+    closeModalButton.textContent = i18nInstance.t('modal.close');
     closeModalButton.addEventListener('click', () => closeModal(watchedState));
     xCloseButton.addEventListener('click', () => closeModal(watchedState));
   } else {
@@ -67,7 +67,7 @@ const renderPosts = (watchedState, i18nInstance) => {
     a.setAttribute('data-id', uniqueId);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
-    a.innerText = title;
+    a.textContent = title;
     li.append(a);
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-primary', 'btn-sm');
@@ -75,7 +75,7 @@ const renderPosts = (watchedState, i18nInstance) => {
     button.setAttribute('data-id', 'button');
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', 'modal');
-    button.innerText = i18nInstance.t('watchButton');
+    button.textContent = i18nInstance.t('watchButton');
     button.addEventListener('click', () => modalHandler(watchedState, uniqueId));
     li.append(button);
     ul.append(li);
@@ -109,12 +109,12 @@ const renderErrors = (state, i18nInstance, feedback, formField) => {
   if (_.isEqual(state.form.error, {})) {
     formField.classList.remove('is-invalid');
     feedback.classList.remove('text-danger');
-    feedback.innerText = '';
+    feedback.textContent = '';
   } else {
     feedback.classList.remove('text-success');
     formField.classList.add('is-invalid');
     feedback.classList.add('text-danger');
-    feedback.innerText = i18nInstance.t(state.form.error);
+    feedback.textContent = i18nInstance.t(state.form.error);
   }
 };
 
