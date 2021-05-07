@@ -117,19 +117,11 @@ const renderForm = (value, formField, feedback) => {
   if (value === true) {
     formField.classList.remove('is-invalid');
     feedback.classList.remove('text-danger');
-<<<<<<< HEAD
-    feedback.textContent = '';
-=======
     feedback.classList.add('text-success');
->>>>>>> parent of a889d50... removed renderForm function from view
   } else {
     formField.classList.add('is-invalid');
     feedback.classList.remove('text-success');
     feedback.classList.add('text-danger');
-<<<<<<< HEAD
-    feedback.textContent = i18nInstance.t(state.form.error);
-=======
->>>>>>> parent of a889d50... removed renderForm function from view
   }
 };
 
@@ -145,12 +137,7 @@ const processStateHandler = (processState, i18nInstance, submitButton, feedback)
       submitButton.disabled = true;
       break;
     case 'finished':
-<<<<<<< HEAD
-      feedback.classList.add('text-success');
-      feedback.textContent = i18nInstance.t('feedback.successfullyLoaded');
-=======
       feedback.innerHTML = i18nInstance.t('feedback.successfullyLoaded');
->>>>>>> parent of a889d50... removed renderForm function from view
       submitButton.disabled = false;
       break;
     default:
@@ -173,13 +160,9 @@ export default (state, i18nInstance, formField, feedback, submitButton, modalFor
       case 'form.valid':
         renderForm(value, formField, feedback);
         break;
-<<<<<<< HEAD
       // case 'form.valid':
       //   renderForm(value, formField, feedback);
       //   break;
-      case 'form.valid':
-=======
->>>>>>> parent of a889d50... removed renderForm function from view
       case 'form.error':
         renderErrors(state, i18nInstance, feedback);
         break;

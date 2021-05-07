@@ -11,7 +11,9 @@ export default (i18nInstance) => {
     form: {
       processState: 'filling',
       processError: null,
-      input: '',
+      field: {
+        input: '',
+      },
       valid: '',
       error: '',
     },
@@ -27,24 +29,15 @@ export default (i18nInstance) => {
       url: 'feedback.urlNotValid',
     },
   });
-  // let schema;
-  // const initializeSchema = () => {
-  //   // const feedLinks = state.feeds.map((feed) => feed.link);
-  //   schema = yup.object().shape({
-  //     input: yup.string().required().url(),
-  //   });
-  // };
-  // .notOneOf(feedLinks, 'feedback.alreadyExists')
+  let schema;
+  const initializeSchema = () => {
+    const feedLinks = state.feeds.map((feed) => feed.link);
+    schema = yup.object().shape({
+      input: yup.string().required().url().notOneOf(feedLinks, 'feedback.alreadyExists'),
+    });
+  };
 
   const validate = (fields) => {
-    const feedLinks = state.feeds.map((feed) => feed.link);
-    yup.setLocale({
-      string: {
-        required: 'feedback.fieldRequired',
-        url: 'feedback.urlNotValid',
-      },
-    });
-    const schema = yup.string().required().url().notOneOf(feedLinks, 'feedback.alreadyExists');
     try {
       schema.validateSync(fields, { abortEarly: false });
       return {};
@@ -52,13 +45,6 @@ export default (i18nInstance) => {
       return e.message;
     }
   };
-  // const validateIfLinkExists = (link) => {
-  //   const feedLinks = state.feeds.map((feed) => feed.link);
-  //   if (_.includes(feedLinks, link)) {
-  //     return 'feedback.alreadyExists';
-  //   }
-  //   return {};
-  // };
   const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
   const form = document.querySelector('form');
@@ -69,10 +55,11 @@ export default (i18nInstance) => {
   const watchedState = watch(state, i18nInstance, formField, feedback, submitButton, modalForm);
 
   const updateValidationState = () => {
-    const error = validate(watchedState.form.field);
-    watchedState.form.error = error;
-    watchedState.form.valid = _.isEqual(error, {});
+    const errors = validate(watchedState.form.field);
+    watchedState.form.valid = _.isEqual(errors, {});
+    watchedState.form.error = errors;
   };
+
   const checkFeedsForUpdates = () => {
     const { feeds } = state;
     const promises = feeds.forEach((feed) => {
@@ -109,9 +96,9 @@ export default (i18nInstance) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const input = formData.get('url');
-    watchedState.form.field = input;
+    watchedState.form.field.input = input;
     console.log(input);
-    // initializeSchema();
+    initializeSchema();
     updateValidationState();
     if (watchedState.form.valid) {
       watchedState.form.processState = 'sending';
