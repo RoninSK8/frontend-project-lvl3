@@ -56,7 +56,7 @@ export default () => {
       const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
       const form = document.querySelector('form');
-      const formField = document.querySelector('.rss-form');
+      const formField = document.querySelector('.form-control');
       const feedback = document.querySelector('.feedback');
       const submitButton = document.querySelector('[type="submit"]');
       const modalForm = document.querySelector('#modal');
@@ -136,6 +136,7 @@ export default () => {
               });
               watchedState.form.processState = 'finished';
               watchedState.posts = newPosts.concat(watchedState.posts);
+              form.reset();
             })
             .catch((err) => {
               watchedState.form.processState = 'failed';

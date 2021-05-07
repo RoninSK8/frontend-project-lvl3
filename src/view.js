@@ -106,7 +106,9 @@ const renderFeeds = (state, i18nInstance) => {
 };
 
 const renderErrors = (state, i18nInstance, feedback) => {
-  if (!_.isEqual(state.form.error, {})) {
+  if (_.isEqual(state.form.error, {})) {
+    feedback.innerText = '';
+  } else {
     feedback.innerText = i18nInstance.t(state.form.error);
   }
 };
