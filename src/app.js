@@ -6,7 +6,7 @@ import parse from './parser.js';
 import watch from './view.js';
 // import resources from './locales';
 
-export default (i18nInstance, state) => {
+export default (i18nInstance) => {
   // const i18nInstance = i18n.createInstance();
   // i18nInstance.init({
   //   lng: 'ru',
@@ -30,6 +30,22 @@ export default (i18nInstance, state) => {
   //       modalWindowPostId: null,
   //       watchedPosts: [],
   //     };
+
+  const state = {
+    form: {
+      processState: 'filling',
+      processError: null,
+      field: {
+        input: '',
+      },
+      valid: '',
+      error: '',
+    },
+    feeds: [],
+    posts: [],
+    modalWindowPostId: null,
+    watchedPosts: [],
+  };
 
   yup.setLocale({
     string: {
