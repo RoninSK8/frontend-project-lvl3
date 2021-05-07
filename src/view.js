@@ -105,25 +105,30 @@ const renderFeeds = (state, i18nInstance) => {
   feeds.append(ul);
 };
 
-const renderErrors = (state, i18nInstance, feedback) => {
+const renderErrors = (state, i18nInstance, feedback, formField) => {
   if (_.isEqual(state.form.error, {})) {
+    formField.classList.remove('is-invalid');
+    feedback.classList.remove('text-danger');
     feedback.innerText = '';
   } else {
+    feedback.classList.remove('text-success');
+    formField.classList.add('is-invalid');
+    feedback.classList.add('text-danger');
     feedback.innerText = i18nInstance.t(state.form.error);
   }
 };
 
-const renderForm = (value, formField, feedback) => {
-  if (value === true) {
-    formField.classList.remove('is-invalid');
-    feedback.classList.remove('text-danger');
-    feedback.classList.add('text-success');
-  } else {
-    formField.classList.add('is-invalid');
-    feedback.classList.remove('text-success');
-    feedback.classList.add('text-danger');
-  }
-};
+// const renderForm = (value, formField, feedback) => {
+//   if (value === true) {
+//     formField.classList.remove('is-invalid');
+//     feedback.classList.remove('text-danger');
+//     feedback.classList.add('text-success');
+//   } else {
+//     formField.classList.add('is-invalid');
+//     feedback.classList.remove('text-success');
+//     feedback.classList.add('text-danger');
+//   }
+// };
 
 const processStateHandler = (processState, i18nInstance, submitButton, feedback) => {
   switch (processState) {
@@ -137,6 +142,7 @@ const processStateHandler = (processState, i18nInstance, submitButton, feedback)
       submitButton.disabled = true;
       break;
     case 'finished':
+      feedback.classList.add('text-success');
       feedback.innerHTML = i18nInstance.t('feedback.successfullyLoaded');
       submitButton.disabled = false;
       break;
@@ -155,13 +161,13 @@ export default (state, i18nInstance, formField, feedback, submitButton, modalFor
         renderModal(watchedState, i18nInstance, modalForm);
         break;
       case 'form.processState':
-        processStateHandler(value, i18nInstance, submitButton, feedback);
+        processStateHandler(value, i18nInstance, submitButton, feedback, formField);
         break;
-      case 'form.valid':
-        renderForm(value, formField, feedback);
-        break;
+      // case 'form.valid':
+      //   renderForm(value, formField, feedback);
+      //   break;
       case 'form.error':
-        renderErrors(state, i18nInstance, feedback);
+        renderErrors(state, i18nInstance, feedback, formField);
         break;
       case 'feeds':
         renderFeeds(state, i18nInstance);
