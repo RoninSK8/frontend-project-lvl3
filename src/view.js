@@ -166,6 +166,7 @@ export default (state, i18nInstance, formField, feedback, submitButton, modalFor
       // case 'form.valid':
       //   renderForm(value, formField, feedback);
       //   break;
+      case 'form.valid':
       case 'form.error':
         renderErrors(state, i18nInstance, feedback, formField);
         break;
