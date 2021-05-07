@@ -7,37 +7,11 @@ import watch from './view.js';
 // import resources from './locales';
 
 export default (i18nInstance) => {
-  // const i18nInstance = i18n.createInstance();
-  // i18nInstance.init({
-  //   lng: 'ru',
-  //   debug: false,
-  //   fallbackLng: ['ru'],
-  //   resources,
-  // })
-  //   .then(() => {
-  //     const state = {
-  //       form: {
-  //         processState: 'filling',
-  //         processError: null,
-  //         field: {
-  //           input: '',
-  //         },
-  //         valid: '',
-  //         error: '',
-  //       },
-  //       feeds: [],
-  //       posts: [],
-  //       modalWindowPostId: null,
-  //       watchedPosts: [],
-  //     };
-
   const state = {
     form: {
       processState: 'filling',
       processError: null,
-      field: {
-        input: '',
-      },
+      input: '',
       valid: '',
       error: '',
     },
@@ -53,16 +27,24 @@ export default (i18nInstance) => {
       url: 'feedback.urlNotValid',
     },
   });
-  let schema;
-  const initializeSchema = () => {
-    // const feedLinks = state.feeds.map((feed) => feed.link);
-    schema = yup.object().shape({
-      input: yup.string().required().url(),
-    });
-  };
+  // let schema;
+  // const initializeSchema = () => {
+  //   // const feedLinks = state.feeds.map((feed) => feed.link);
+  //   schema = yup.object().shape({
+  //     input: yup.string().required().url(),
+  //   });
+  // };
   // .notOneOf(feedLinks, 'feedback.alreadyExists')
 
   const validate = (fields) => {
+    const feedLinks = state.feeds.map((feed) => feed.link);
+    yup.setLocale({
+      string: {
+        required: 'feedback.fieldRequired',
+        url: 'feedback.urlNotValid',
+      },
+    });
+    const schema = yup.string().required().url().notOneOf(feedLinks, 'feedback.alreadyExists');
     try {
       schema.validateSync(fields, { abortEarly: false });
       return {};
@@ -70,13 +52,13 @@ export default (i18nInstance) => {
       return e.message;
     }
   };
-  const validateIfLinkExists = (link) => {
-    const feedLinks = state.feeds.map((feed) => feed.link);
-    if (_.includes(feedLinks, link)) {
-      return 'feedback.alreadyExists';
-    }
-    return {};
-  };
+  // const validateIfLinkExists = (link) => {
+  //   const feedLinks = state.feeds.map((feed) => feed.link);
+  //   if (_.includes(feedLinks, link)) {
+  //     return 'feedback.alreadyExists';
+  //   }
+  //   return {};
+  // };
   const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
   const form = document.querySelector('form');
@@ -87,16 +69,7 @@ export default (i18nInstance) => {
   const watchedState = watch(state, i18nInstance, formField, feedback, submitButton, modalForm);
 
   const updateValidationState = () => {
-    const link = watchedState.form.field.input;
-    const formatError = validate(watchedState.form.field);
-    const alreadyExistsError = validateIfLinkExists(link);
-    let error = {};
-    if (!_.isEqual(formatError, {})) {
-      error = formatError;
-    }
-    if (!_.isEqual(alreadyExistsError, {})) {
-      error = alreadyExistsError;
-    }
+    const error = validate(watchedState.form.field);
     watchedState.form.error = error;
     watchedState.form.valid = _.isEqual(error, {});
   };
@@ -136,9 +109,9 @@ export default (i18nInstance) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const input = formData.get('url');
-    watchedState.form.field.input = input;
+    watchedState.form.field = input;
     console.log(input);
-    initializeSchema();
+    // initializeSchema();
     updateValidationState();
     if (watchedState.form.valid) {
       watchedState.form.processState = 'sending';
