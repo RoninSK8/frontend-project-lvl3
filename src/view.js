@@ -143,7 +143,7 @@ const processStateHandler = (processState, i18nInstance, submitButton, feedback)
       break;
     case 'finished':
       feedback.classList.add('text-success');
-      feedback.innerHTML = i18nInstance.t('feedback.successfullyLoaded');
+      feedback.textContent = i18nInstance.t('feedback.successfullyLoaded');
       submitButton.disabled = false;
       break;
     default:
