@@ -8,7 +8,7 @@
 <p align="center">Hexlet tests and linter status:</p>
 <p align="center">
   <a href="https://github.com/RoninSK8/frontend-project-lvl3/actions"><img src="https://github.com/RoninSK8/frontend-project-lvl3/workflows/hexlet-check/badge.svg" /></a>
-  <a href="https://api.codeclimate.com/v1/badges/a69b4e44ae057aa2acc2/maintainability"><img src="https://api.codeclimate.com/v1/badges/a69b4e44ae057aa2acc2/maintainability" /></a>
+  <a href="https://codeclimate.com/github/RoninSK8/frontend-project-lvl3/maintainability"><img src="https://api.codeclimate.com/v1/badges/a69b4e44ae057aa2acc2/maintainability" /></a>
 </p>
 
 ## В проекте используется:
