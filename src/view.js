@@ -22,11 +22,11 @@ const renderModal = (watchedState, i18nInstance, modalForm) => {
   if (postId) {
     modalForm.classList.add('show');
     modalForm.setAttribute('style', 'padding-right: 17px; display: block;');
-    modalTitle.innerText = currentPost.title;
-    modalDescription.innerText = currentPost.description;
-    goToFullArticleButton.innerText = i18nInstance.t('modal.readFull');
+    modalTitle.textContent = currentPost.title;
+    modalDescription.textContent = currentPost.description;
+    goToFullArticleButton.textContent = i18nInstance.t('modal.readFull');
     goToFullArticleButton.setAttribute('href', currentPost.link);
-    closeModalButton.innerText = i18nInstance.t('modal.close');
+    closeModalButton.textContent = i18nInstance.t('modal.close');
     closeModalButton.addEventListener('click', () => closeModal(watchedState));
     xCloseButton.addEventListener('click', () => closeModal(watchedState));
   } else {
@@ -66,7 +66,7 @@ const renderPosts = (watchedState, i18nInstance) => {
     a.setAttribute('data-id', uniqueId);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
-    a.innerText = title;
+    a.textContent = title;
     li.append(a);
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-primary', 'btn-sm');
@@ -74,7 +74,7 @@ const renderPosts = (watchedState, i18nInstance) => {
     button.setAttribute('data-id', 'button');
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', 'modal');
-    button.innerText = i18nInstance.t('watchButton');
+    button.textContent = i18nInstance.t('watchButton');
     button.addEventListener('click', () => modalHandler(watchedState, uniqueId));
     li.append(button);
     ul.append(li);
@@ -89,7 +89,7 @@ const renderFeeds = (state, i18nInstance) => {
     return;
   }
   const h2 = document.createElement('h2');
-  h2.innerHTML = i18nInstance.t('feeds');
+  h2.textContent = i18nInstance.t('feeds');
   feeds.append(h2);
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'mb-5');
@@ -106,9 +106,9 @@ const renderFeeds = (state, i18nInstance) => {
 
 const renderErrors = (state, i18nInstance, feedback) => {
   if (_.isEqual(state.form.error, {})) {
-    feedback.innerText = '';
+    feedback.textContent = '';
   } else {
-    feedback.innerText = i18nInstance.t(state.form.error);
+    feedback.textContent = i18nInstance.t(state.form.error);
   }
 };
 
@@ -159,9 +159,6 @@ export default (state, i18nInstance, formField, feedback, submitButton, modalFor
       case 'form.valid':
         renderForm(value, formField, feedback);
         break;
-      // case 'form.valid':
-      //   renderForm(value, formField, feedback);
-      //   break;
       case 'form.error':
         renderErrors(state, i18nInstance, feedback);
         break;
