@@ -64,8 +64,8 @@ export default () => {
 
       const updateValidationState = () => {
         const errors = validate(watchedState.form.field);
-        watchedState.form.valid = _.isEqual(errors, {});
         watchedState.form.error = errors;
+        watchedState.form.valid = _.isEqual(errors, {});
       };
       const checkFeedsForUpdates = () => {
         const { feeds } = state;
