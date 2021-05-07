@@ -24,9 +24,9 @@ const renderModal = (watchedState, i18nInstance, modalForm) => {
     modalForm.setAttribute('style', 'padding-right: 17px; display: block;');
     modalTitle.textContent = currentPost.title;
     modalDescription.textContent = currentPost.description;
-    goToFullArticleButton.textContent = i18nInstance.t('modal.readFull');
+    goToFullArticleButton.innerHTML = i18nInstance.t('modal.readFull');
     goToFullArticleButton.setAttribute('href', currentPost.link);
-    closeModalButton.textContent = i18nInstance.t('modal.close');
+    closeModalButton.innerHTML = i18nInstance.t('modal.close');
     closeModalButton.addEventListener('click', () => closeModal(watchedState));
     xCloseButton.addEventListener('click', () => closeModal(watchedState));
   } else {
@@ -106,9 +106,9 @@ const renderFeeds = (state, i18nInstance) => {
 
 const renderErrors = (state, i18nInstance, feedback) => {
   if (_.isEqual(state.form.error, {})) {
-    feedback.textContent = '';
+    feedback.innerHTML = '';
   } else {
-    feedback.textContent = i18nInstance.t(state.form.error);
+    feedback.innerHTML = i18nInstance.t(state.form.error);
   }
 };
 
