@@ -111,10 +111,10 @@ const renderErrors = (state, i18nInstance, feedback, formField) => {
     feedback.classList.remove('text-danger');
     feedback.textContent = '';
   } else {
-    feedback.textContent = i18nInstance.t(state.form.error);
     feedback.classList.remove('text-success');
     formField.classList.add('is-invalid');
     feedback.classList.add('text-danger');
+    feedback.textContent = i18nInstance.t(state.form.error);
   }
 };
 
