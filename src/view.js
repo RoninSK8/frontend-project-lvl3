@@ -9,7 +9,6 @@ const modalHandler = (watchedState, id) => {
 const closeModal = (watchedState) => {
   watchedState.modalWindowPostId = null;
 };
-
 const renderModal = (watchedState, i18nInstance, modalForm) => {
   const postId = watchedState.modalWindowPostId;
 
@@ -23,11 +22,11 @@ const renderModal = (watchedState, i18nInstance, modalForm) => {
   if (postId) {
     modalForm.classList.add('show');
     modalForm.setAttribute('style', 'padding-right: 17px; display: block;');
-    modalTitle.textContent = currentPost.title;
-    modalDescription.textContent = currentPost.description;
-    goToFullArticleButton.textContent = i18nInstance.t('modal.readFull');
+    modalTitle.innerText = currentPost.title;
+    modalDescription.innerText = currentPost.description;
+    goToFullArticleButton.innerText = i18nInstance.t('modal.readFull');
     goToFullArticleButton.setAttribute('href', currentPost.link);
-    closeModalButton.textContent = i18nInstance.t('modal.close');
+    closeModalButton.innerText = i18nInstance.t('modal.close');
     closeModalButton.addEventListener('click', () => closeModal(watchedState));
     xCloseButton.addEventListener('click', () => closeModal(watchedState));
   } else {
@@ -67,7 +66,7 @@ const renderPosts = (watchedState, i18nInstance) => {
     a.setAttribute('data-id', uniqueId);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
-    a.textContent = title;
+    a.innerText = title;
     li.append(a);
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-primary', 'btn-sm');
@@ -75,7 +74,7 @@ const renderPosts = (watchedState, i18nInstance) => {
     button.setAttribute('data-id', 'button');
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', 'modal');
-    button.textContent = i18nInstance.t('watchButton');
+    button.innerText = i18nInstance.t('watchButton');
     button.addEventListener('click', () => modalHandler(watchedState, uniqueId));
     li.append(button);
     ul.append(li);
