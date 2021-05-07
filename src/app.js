@@ -39,11 +39,12 @@ export default () => {
       });
       let schema;
       const initializeSchema = () => {
-        const feedLinks = state.feeds.map((feed) => feed.link);
+        // const feedLinks = state.feeds.map((feed) => feed.link);
         schema = yup.object().shape({
-          input: yup.string().required().url().notOneOf(feedLinks, 'feedback.alreadyExists'),
+          input: yup.string().required().url(),
         });
       };
+      // .notOneOf(feedLinks, 'feedback.alreadyExists')
 
       const validate = (fields) => {
         try {
@@ -52,6 +53,13 @@ export default () => {
         } catch (e) {
           return e.message;
         }
+      };
+      const validateIfLinkExists = (link) => {
+        const feedLinks = state.feeds.map((feed) => feed.link);
+        if (_.includes(feedLinks, link)) {
+          return 'feedback.alreadyExists';
+        }
+        return {};
       };
       const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
@@ -63,9 +71,18 @@ export default () => {
       const watchedState = watch(state, i18nInstance, formField, feedback, submitButton, modalForm);
 
       const updateValidationState = () => {
-        const errors = validate(watchedState.form.field);
-        watchedState.form.error = errors;
-        watchedState.form.valid = _.isEqual(errors, {});
+        const link = watchedState.form.field.input;
+        const formatError = validate(watchedState.form.field);
+        const alreadyExistsError = validateIfLinkExists(link);
+        let error = {};
+        if (!_.isEqual(formatError, {})) {
+          error = formatError;
+        }
+        if (!_.isEqual(alreadyExistsError, {})) {
+          error = alreadyExistsError;
+        }
+        watchedState.form.error = error;
+        watchedState.form.valid = _.isEqual(error, {});
       };
       const checkFeedsForUpdates = () => {
         const { feeds } = state;
