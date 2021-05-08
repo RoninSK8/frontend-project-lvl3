@@ -126,22 +126,23 @@ const renderForm = (value, formField, feedback, i18nInstance, state) => {
 };
 
 const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
+  const input = document.querySelector('input');
   switch (state.form.processState) {
     case 'failed':
       submitButton.disabled = false;
       feedback.innerHTML = `${i18nInstance.t(`${state.form.error}`)}`;
-      // formField.removeAttribute('readonly');
+      input.removeAttribute('readonly');
       break;
     case 'filling':
       submitButton.disabled = false;
       break;
     case 'sending':
       submitButton.disabled = true;
-      // formField.setAttribute('readonly', true);
+      input.setAttribute('readonly', true);
       break;
     case 'finished':
       feedback.innerHTML = i18nInstance.t('feedback.successfullyLoaded');
-      // formField.removeAttribute('readonly');
+      input.removeAttribute('readonly');
       submitButton.disabled = false;
       break;
     default:
