@@ -125,13 +125,11 @@ const renderForm = (value, formField, feedback, i18nInstance, state) => {
   }
 };
 
-const processStateHandler = (processState, i18nInstance, submitButton, feedback, state) => {
-  switch (processState) {
+const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
+  switch (state.form.processState) {
     case 'failed':
       submitButton.disabled = false;
-      console.log(i18nInstance);
-      console.log(state.form.error);
-      console.log(state);
+      console.log(i18nInstance.t(state.form.error));
       feedback.innerHTML = i18nInstance.t(state.form.error);
       // formField.removeAttribute('readonly');
       break;
@@ -148,7 +146,7 @@ const processStateHandler = (processState, i18nInstance, submitButton, feedback,
       submitButton.disabled = false;
       break;
     default:
-      throw new Error(`Unknown state: ${processState}`);
+      throw new Error(`Unknown state: ${state.form.processState}`);
   }
 };
 
@@ -163,7 +161,7 @@ export default (state, i18nInstance, formField, submitButton, modalForm) => {
         renderModal(watchedState, i18nInstance, modalForm);
         break;
       case 'form.processState':
-        processStateHandler(value, i18nInstance, submitButton, feedback, state);
+        processStateHandler(i18nInstance, submitButton, feedback, state);
         break;
       case 'form.valid':
         renderForm(value, formField, feedback, i18nInstance, state);
