@@ -127,7 +127,6 @@ export default (i18nInstance) => {
           form.reset();
         })
         .catch((err) => {
-          watchedState.form.processState = 'failed';
           switch (err.message) {
             case 'Error parsing XML':
               watchedState.form.error = 'feedback.rssParsingError';
@@ -138,6 +137,7 @@ export default (i18nInstance) => {
             default:
               break;
           }
+          watchedState.form.processState = 'failed';
           watchedState.form.valid = false;
         });
     }
