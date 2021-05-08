@@ -97,7 +97,6 @@ export default (i18nInstance) => {
     const formData = new FormData(e.target);
     const input = formData.get('url');
     watchedState.form.field.input = input;
-    console.log(input);
     initializeSchema();
     updateValidationState();
     if (watchedState.form.valid) {
@@ -123,8 +122,8 @@ export default (i18nInstance) => {
             post.feedId = feedId;
             post.uniqueId = _.uniqueId();
           });
-          watchedState.form.processState = 'finished';
           watchedState.posts = newPosts.concat(watchedState.posts);
+          watchedState.form.processState = 'finished';
           form.reset();
         })
         .catch((err) => {

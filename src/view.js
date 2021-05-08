@@ -112,7 +112,7 @@ const renderErrors = (state, i18nInstance, feedback) => {
   }
 };
 
-const renderForm = (value, formField, feedback) => {
+const renderForm = (value, formField, feedback, i18nInstance, state) => {
   if (value === true) {
     formField.classList.remove('is-invalid');
     feedback.classList.remove('text-danger');
@@ -121,22 +121,27 @@ const renderForm = (value, formField, feedback) => {
     formField.classList.add('is-invalid');
     feedback.classList.remove('text-success');
     feedback.classList.add('text-danger');
+    feedback.innerHTML = i18nInstance.t(state.form.error);
   }
 };
 
-const processStateHandler = (processState, i18nInstance, submitButton, feedback) => {
+const processStateHandler = (processState, i18nInstance, submitButton, feedback, state) => {
   switch (processState) {
     case 'failed':
       submitButton.disabled = false;
+      feedback.innerHTML = i18nInstance.t(state.form.error);
+      // formField.removeAttribute('readonly');
       break;
     case 'filling':
       submitButton.disabled = false;
       break;
     case 'sending':
       submitButton.disabled = true;
+      // formField.setAttribute('readonly', true);
       break;
     case 'finished':
       feedback.innerHTML = i18nInstance.t('feedback.successfullyLoaded');
+      // formField.removeAttribute('readonly');
       submitButton.disabled = false;
       break;
     default:
@@ -154,10 +159,10 @@ export default (state, i18nInstance, formField, feedback, submitButton, modalFor
         renderModal(watchedState, i18nInstance, modalForm);
         break;
       case 'form.processState':
-        processStateHandler(value, i18nInstance, submitButton, feedback);
+        processStateHandler(value, i18nInstance, submitButton, feedback, state);
         break;
       case 'form.valid':
-        renderForm(value, formField, feedback);
+        renderForm(value, formField, feedback, submitButton, feedback);
         break;
       case 'form.error':
         renderErrors(state, i18nInstance, feedback);
