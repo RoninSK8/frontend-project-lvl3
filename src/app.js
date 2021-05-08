@@ -6,7 +6,7 @@ import parse from './parser.js';
 import watch from './view.js';
 // import resources from './locales';
 
-export default (i18nInstance) => {
+export default (i18n) => {
   const state = {
     form: {
       processState: 'filling',
@@ -53,7 +53,7 @@ export default (i18nInstance) => {
   const submitButton = document.querySelector('[type="submit"]');
   const modalForm = document.querySelector('#modal');
 
-  const watchedState = watch(state, i18nInstance, formField, submitButton, modalForm);
+  const watchedState = watch(state, i18n, formField, submitButton, modalForm);
 
   const updateValidationState = () => {
     const errors = validate(watchedState.form.field);
