@@ -49,10 +49,11 @@ export default (i18nInstance) => {
 
   const form = document.querySelector('form');
   const formField = document.querySelector('.form-control');
-  const feedback = document.querySelector('.feedback');
+
   const submitButton = document.querySelector('[type="submit"]');
   const modalForm = document.querySelector('#modal');
-  const watchedState = watch(state, i18nInstance, formField, feedback, submitButton, modalForm);
+
+  const watchedState = watch(state, i18nInstance, formField, submitButton, modalForm);
 
   const updateValidationState = () => {
     const errors = validate(watchedState.form.field);

@@ -129,6 +129,9 @@ const processStateHandler = (processState, i18nInstance, submitButton, feedback,
   switch (processState) {
     case 'failed':
       submitButton.disabled = false;
+      console.log(i18nInstance);
+      console.log(state.form.error);
+      console.log(state);
       feedback.innerHTML = i18nInstance.t(state.form.error);
       // formField.removeAttribute('readonly');
       break;
@@ -149,7 +152,8 @@ const processStateHandler = (processState, i18nInstance, submitButton, feedback,
   }
 };
 
-export default (state, i18nInstance, formField, feedback, submitButton, modalForm) => {
+export default (state, i18nInstance, formField, submitButton, modalForm) => {
+  const feedback = document.querySelector('.feedback');
   const watchedState = onChange(state, (path, value) => {
     switch (path) {
       case 'watchedPosts':
@@ -162,7 +166,7 @@ export default (state, i18nInstance, formField, feedback, submitButton, modalFor
         processStateHandler(value, i18nInstance, submitButton, feedback, state);
         break;
       case 'form.valid':
-        renderForm(value, formField, feedback, submitButton, feedback);
+        renderForm(value, formField, feedback, i18nInstance, state);
         break;
       case 'form.error':
         renderErrors(state, i18nInstance, feedback);
