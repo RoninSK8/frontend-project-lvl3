@@ -129,8 +129,8 @@ const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
   switch (state.form.processState) {
     case 'failed':
       submitButton.disabled = false;
-      console.log(i18nInstance);
-      feedback.innerHTML = `${i18nInstance.t(`${state.form.error}`)}`;
+      // console.log(i18nInstance);
+      // feedback.innerHTML = `${i18nInstance.t(`${state.form.error}`)}`;
       // formField.removeAttribute('readonly');
       break;
     case 'filling':
