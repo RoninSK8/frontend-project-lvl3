@@ -10,7 +10,7 @@ export default (i18n) => {
   const state = {
     form: {
       processState: 'filling',
-      processError: null,
+      // processError: null,
       field: {
         input: '',
       },
@@ -120,23 +120,23 @@ export default (i18n) => {
           });
           watchedState.posts = newPosts.concat(watchedState.posts);
           watchedState.form.processState = 'finished';
-          watchedState.form.processError = null;
+          // watchedState.form.processError = null;
           form.reset();
         })
         .catch((err) => {
           console.log(`!!!!!!!!!${JSON.stringify(err)}`);
           switch (err.message) {
             case 'Error parsing XML':
-              watchedState.form.processError = 'feedback.rssParsingError';
+              watchedState.form.error = 'feedback.rssParsingError';
               break;
             case 'Network Error':
-              watchedState.form.processError = 'feedback.networkError';
+              watchedState.form.errorr = 'feedback.networkError';
               break;
             case 'no internet':
-              watchedState.form.processError = 'feedback.networkError';
+              watchedState.form.error = 'feedback.networkError';
               break;
             default:
-              watchedState.form.processError = 'feedback.rssParsingError';
+              watchedState.form.error = 'feedback.rssParsingError';
               break;
           }
           watchedState.form.processState = 'failed';
