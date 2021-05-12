@@ -58,9 +58,7 @@ export default (i18n) => {
   const updateValidationState = () => {
     const error = validate(watchedState.form.field);
     watchedState.form.valid = _.isEqual(error, '');
-    if (error !== '') {
-      watchedState.form.error = error;
-    }
+    watchedState.form.error = error;
   };
 
   const checkFeedsForUpdates = () => {
@@ -127,15 +125,16 @@ export default (i18n) => {
           });
           watchedState.posts = newPosts.concat(watchedState.posts);
           watchedState.form.processState = 'finished';
+          watchedState.form.processError = null;
           form.reset();
         })
         .catch((err) => {
           switch (err.message) {
             case 'Error parsing XML':
-              watchedState.form.error = 'feedback.rssParsingError';
+              watchedState.form.processError = 'feedback.rssParsingError';
               break;
             case 'Network Error':
-              watchedState.form.error = 'feedback.networkError';
+              watchedState.form.processError = 'feedback.networkError';
               break;
             default:
               break;

@@ -114,6 +114,14 @@ const renderErrors = (state, i18nInstance, feedback) => {
   }
 };
 
+const renderProcessError = (state, i18nInstance, feedback) => {
+  if (state.form.processError === null) {
+    feedback.innerHTML = '';
+  } else {
+    feedback.innerHTML = i18nInstance.t(state.form.processError);
+  }
+};
+
 const renderForm = (value, formField, feedback) => {
   // , i18nInstance, state
   if (value === true) {
@@ -173,6 +181,9 @@ export default (state, i18nInstance, formField, submitButton, modalForm) => {
         break;
       case 'form.valid':
         renderForm(value, formField, feedback, i18nInstance, state);
+        break;
+      case 'form.processError':
+        renderProcessError(state, i18nInstance, feedback);
         break;
       case 'form.error':
         renderErrors(state, i18nInstance, feedback);
