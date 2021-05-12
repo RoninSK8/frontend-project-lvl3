@@ -11,6 +11,10 @@
   <a href="https://codeclimate.com/github/RoninSK8/frontend-project-lvl3/maintainability"><img src="https://api.codeclimate.com/v1/badges/a69b4e44ae057aa2acc2/maintainability" /></a>
 </p>
 
+### [Ссылка на проект](https://roninsk8-rss-reader.vercel.app/)
+
+![image](demoScreenForReadme.png)
+
 ## В проекте используется:
 * Webpack
 * Bootstrap
@@ -19,8 +23,6 @@
 * http-запросы [Axios](https://github.com/axios/axios)
 * [CodeClimate](https://codeclimate.com/)
 * Деплой на [Vercel](https://vercel.com/)
-
-### [Ссылка на проект](https://roninsk8-rss-reader.vercel.app/)
 
 ##### RSS ленты для тестов:
 * https://ru.hexlet.io/lessons.rss
