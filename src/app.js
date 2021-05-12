@@ -129,7 +129,7 @@ export default (i18n) => {
           form.reset();
         })
         .catch((err) => {
-          console.log(`!!!!!!!!!!!!!!!${err.message}`);
+          console.log(`!!!!!!!!!!!!!!!${err}`);
           switch (err.message) {
             case 'Error parsing XML':
               watchedState.form.processError = 'feedback.rssParsingError';
