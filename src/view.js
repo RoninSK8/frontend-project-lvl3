@@ -105,7 +105,7 @@ const renderFeeds = (state, i18nInstance) => {
 };
 
 const renderErrors = (state, i18nInstance, feedback) => {
-  if (_.isEqual(state.form.error, {})) {
+  if (_.isEqual(state.form.error, '')) {
     feedback.innerHTML = '';
   } else {
     // console.log(state.form.error)
@@ -114,7 +114,8 @@ const renderErrors = (state, i18nInstance, feedback) => {
   }
 };
 
-const renderForm = (value, formField, feedback, i18nInstance, state) => {
+const renderForm = (value, formField, feedback) => {
+  // , i18nInstance, state
   if (value === true) {
     formField.classList.remove('is-invalid');
     feedback.classList.remove('text-danger');
@@ -159,6 +160,7 @@ const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
 export default (state, i18nInstance, formField, submitButton, modalForm) => {
   const feedback = document.querySelector('.feedback');
   const watchedState = onChange(state, (path, value) => {
+    console.log(path, value);
     switch (path) {
       case 'watchedPosts':
         renderWatchedStatuses(watchedState);

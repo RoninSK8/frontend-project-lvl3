@@ -40,7 +40,7 @@ export default (i18n) => {
   const validate = (fields) => {
     try {
       schema.validateSync(fields, { abortEarly: false });
-      return {};
+      return '';
     } catch (e) {
       return e.message;
     }
@@ -56,9 +56,9 @@ export default (i18n) => {
   const watchedState = watch(state, i18n, formField, submitButton, modalForm);
 
   const updateValidationState = () => {
-    const errors = validate(watchedState.form.field);
-    watchedState.form.valid = _.isEqual(errors, {});
-    watchedState.form.error = errors;
+    const error = validate(watchedState.form.field);
+    watchedState.form.valid = _.isEqual(error, '');
+    watchedState.form.error = error;
   };
 
   const checkFeedsForUpdates = () => {
