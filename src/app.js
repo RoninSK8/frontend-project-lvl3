@@ -137,6 +137,9 @@ export default (i18n) => {
             case 'Network Error':
               watchedState.form.processError = 'feedback.networkError';
               break;
+            case 'no internet':
+              watchedState.form.processError = 'feedback.networkError';
+              break;
             default:
               watchedState.form.processError = 'feedback.rssParsingError';
               break;
