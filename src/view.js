@@ -108,22 +108,11 @@ const renderErrors = (state, i18nInstance, feedback) => {
   if (_.isEqual(state.form.error, '')) {
     feedback.innerHTML = '';
   } else {
-    // console.log(state.form.error)
-    // console.log(i18nInstance.t(state.form.error))
     feedback.innerHTML = i18nInstance.t(state.form.error);
   }
 };
 
-// const renderProcessError = (state, i18nInstance, feedback) => {
-//   if (state.form.processError === null) {
-//     feedback.innerHTML = '';
-//   } else {
-//     feedback.innerHTML = i18nInstance.t(state.form.processError);
-//   }
-// };
-
 const renderForm = (value, formField, feedback) => {
-  // , i18nInstance, state
   if (value === true) {
     formField.classList.remove('is-invalid');
     feedback.classList.remove('text-danger');
@@ -132,9 +121,6 @@ const renderForm = (value, formField, feedback) => {
     formField.classList.add('is-invalid');
     feedback.classList.remove('text-success');
     feedback.classList.add('text-danger');
-    // console.log(state.form.error)
-    // console.log(i18nInstance.t(state.form.error))
-    // feedback.innerHTML = i18nInstance.t(state.form.error);
   }
 };
 
@@ -143,9 +129,6 @@ const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
   switch (state.form.processState) {
     case 'failed':
       submitButton.disabled = false;
-      // console.log(state.form.error)
-      // console.log(i18nInstance.t(state.form.error))
-      // feedback.innerHTML = `${i18nInstance.t(`${state.form.error}`)}`;
       input.removeAttribute('readonly');
       break;
     case 'filling':
@@ -168,7 +151,6 @@ const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
 export default (state, i18nInstance, formField, submitButton, modalForm) => {
   const feedback = document.querySelector('.feedback');
   const watchedState = onChange(state, (path, value) => {
-    // console.log(path, value);
     switch (path) {
       case 'watchedPosts':
         renderWatchedStatuses(watchedState);
@@ -182,9 +164,6 @@ export default (state, i18nInstance, formField, submitButton, modalForm) => {
       case 'form.valid':
         renderForm(value, formField, feedback, i18nInstance, state);
         break;
-      // case 'form.processError':
-      //   renderProcessError(state, i18nInstance, feedback);
-      //   break;
       case 'form.error':
         renderErrors(state, i18nInstance, feedback);
         break;
