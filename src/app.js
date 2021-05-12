@@ -69,12 +69,7 @@ export default (i18n) => {
       axios.get(feedLink)
         .then((response) => {
           const content = response.data.contents;
-          let feedData;
-          try {
-            feedData = parse(content);
-          } catch (err) {
-            throw new Error(err.message);
-          }
+          const feedData = parse(content);
           const updatedPosts = feedData.feed.posts;
           const updatedPostsTitles = updatedPosts.map((post) => post.title);
           const currentPosts = state.posts.filter((post) => post.feedId === feedId);
