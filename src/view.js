@@ -108,6 +108,8 @@ const renderErrors = (state, i18nInstance, feedback) => {
   if (_.isEqual(state.form.error, {})) {
     feedback.innerHTML = '';
   } else {
+    // console.log(state.form.error)
+    // console.log(i18nInstance.t(state.form.error))
     feedback.innerHTML = i18nInstance.t(state.form.error);
   }
 };
@@ -121,7 +123,9 @@ const renderForm = (value, formField, feedback, i18nInstance, state) => {
     formField.classList.add('is-invalid');
     feedback.classList.remove('text-success');
     feedback.classList.add('text-danger');
-    feedback.innerHTML = i18nInstance.t(state.form.error);
+    // console.log(state.form.error)
+    // console.log(i18nInstance.t(state.form.error))
+    // feedback.innerHTML = i18nInstance.t(state.form.error);
   }
 };
 
@@ -130,7 +134,9 @@ const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
   switch (state.form.processState) {
     case 'failed':
       submitButton.disabled = false;
-      feedback.innerHTML = `${i18nInstance.t(`${state.form.error}`)}`;
+      // console.log(state.form.error)
+      // console.log(i18nInstance.t(state.form.error))
+      // feedback.innerHTML = `${i18nInstance.t(`${state.form.error}`)}`;
       input.removeAttribute('readonly');
       break;
     case 'filling':
