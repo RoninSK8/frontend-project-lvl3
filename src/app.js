@@ -29,15 +29,14 @@ export default (i18n) => {
       url: 'feedback.urlNotValid',
     },
   });
-  let schema;
-  const initializeSchema = () => {
-    const feedLinks = state.feeds.map((feed) => feed.link);
-    schema = yup.object().shape({
+  const initializeSchema = (feedLinks) => {
+    const initializedSchema = yup.object().shape({
       input: yup.string().required().url().notOneOf(feedLinks, 'feedback.alreadyExists'),
     });
+    return initializedSchema;
   };
 
-  const validate = (fields) => {
+  const validate = (fields, schema) => {
     try {
       schema.validateSync(fields, { abortEarly: false });
       return '';
@@ -55,8 +54,8 @@ export default (i18n) => {
 
   const watchedState = watch(state, i18n, formField, submitButton, modalForm);
 
-  const updateValidationState = () => {
-    const error = validate(watchedState.form.field);
+  const updateValidationState = (schema) => {
+    const error = validate(watchedState.form.field, schema);
     watchedState.form.valid = _.isEqual(error, '');
     watchedState.form.error = error;
   };
@@ -93,8 +92,9 @@ export default (i18n) => {
     const formData = new FormData(e.target);
     const input = formData.get('url');
     watchedState.form.field.input = input;
-    initializeSchema();
-    updateValidationState();
+    const feedLinks = state.feeds.map((feed) => feed.link);
+    const schema = initializeSchema(feedLinks);
+    updateValidationState(schema);
     if (watchedState.form.valid) {
       watchedState.form.processState = 'sending';
       const url = proxifyUrl(new URL(input));
@@ -124,7 +124,7 @@ export default (i18n) => {
           form.reset();
         })
         .catch((err) => {
-          console.log(`!!!!!!!!!${JSON.stringify(err)}`);
+          // console.log(`!!!!!!!!!${JSON.stringify(err)}`);
           switch (err.message) {
             case 'Error parsing XML':
               watchedState.form.error = 'feedback.rssParsingError';

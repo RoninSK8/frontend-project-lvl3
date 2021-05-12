@@ -114,13 +114,13 @@ const renderErrors = (state, i18nInstance, feedback) => {
   }
 };
 
-const renderProcessError = (state, i18nInstance, feedback) => {
-  if (state.form.processError === null) {
-    feedback.innerHTML = '';
-  } else {
-    feedback.innerHTML = i18nInstance.t(state.form.processError);
-  }
-};
+// const renderProcessError = (state, i18nInstance, feedback) => {
+//   if (state.form.processError === null) {
+//     feedback.innerHTML = '';
+//   } else {
+//     feedback.innerHTML = i18nInstance.t(state.form.processError);
+//   }
+// };
 
 const renderForm = (value, formField, feedback) => {
   // , i18nInstance, state
@@ -168,7 +168,7 @@ const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
 export default (state, i18nInstance, formField, submitButton, modalForm) => {
   const feedback = document.querySelector('.feedback');
   const watchedState = onChange(state, (path, value) => {
-    console.log(path, value);
+    // console.log(path, value);
     switch (path) {
       case 'watchedPosts':
         renderWatchedStatuses(watchedState);
@@ -182,9 +182,9 @@ export default (state, i18nInstance, formField, submitButton, modalForm) => {
       case 'form.valid':
         renderForm(value, formField, feedback, i18nInstance, state);
         break;
-      case 'form.processError':
-        renderProcessError(state, i18nInstance, feedback);
-        break;
+      // case 'form.processError':
+      //   renderProcessError(state, i18nInstance, feedback);
+      //   break;
       case 'form.error':
         renderErrors(state, i18nInstance, feedback);
         break;
