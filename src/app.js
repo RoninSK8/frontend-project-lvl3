@@ -132,7 +132,7 @@ export default (i18n) => {
               watchedState.form.error = 'feedback.networkError';
               break;
             case 'Request failed with status code 500':
-              watchedState.form.error = 'feedback.networkError';
+              watchedState.form.error = 'feedback.rssParsingError';
               break;
             default:
               watchedState.form.error = 'feedback.rssParsingError';
