@@ -78,8 +78,7 @@ export default (i18n) => {
             watchedState.posts = updatedPosts.concat(watchedState.posts);
           }
         })
-        .then(() => setTimeout(checkFeedsForUpdates, 5000))
-        .catch(() => {});
+        .then(() => setTimeout(checkFeedsForUpdates, 5000));
     });
     return promises;
   };
