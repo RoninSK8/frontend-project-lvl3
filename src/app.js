@@ -94,7 +94,7 @@ export default (i18n) => {
     updateValidationState(schema);
     if (watchedState.form.valid) {
       watchedState.form.processState = 'sending';
-      const url = proxifyUrl(new URL(input));
+      const url = proxifyUrl(input);
       axios.get(url)
         .then((response) => {
           const content = response.data.contents;
