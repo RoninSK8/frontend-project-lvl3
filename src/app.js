@@ -132,7 +132,7 @@ export default (i18n) => {
               watchedState.form.error = 'feedback.networkError';
               break;
             default:
-              watchedState.form.error = 'feedback.rssParsingError';
+              watchedState.form.error = 'feedback.networkError';
               break;
           }
           watchedState.form.processState = 'failed';
