@@ -41,7 +41,7 @@ export default (i18n) => {
       return e.message;
     }
   };
-  const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${encodeURIComponent(url)}`;
+  const proxifyUrl = (url) => `https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${url}`;
 
   const form = document.querySelector('form');
   const formField = document.querySelector('.form-control');
