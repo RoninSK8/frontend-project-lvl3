@@ -57,60 +57,9 @@ export default (i18n) => {
     watchedState.form.error = error;
   };
 
-  // const checkFeedsForUpdates = () => {
-  //   const { feeds } = state;
-  //   const promises = feeds.map((feed) => {
-  //     const feedId = feed.id;
-  //     const feedLink = proxifyUrl(feed.link);
-  //     return axios.get(feedLink)
-  //       .then((response) => {
-  //         const content = response.data.contents;
-  //         const feedData = parse(content);
-  //         const updatedPosts = feedData.feed.posts;
-
-  //         const currentPosts = state.posts.filter((post) => post.feedId === feedId);
-  //         const newPosts = _.differenceBy(updatedPosts, currentPosts, 'title');
-  //         newPosts.forEach((post) => {
-  //           post.feedId = feedId;
-  //           post.uniqueId = _.uniqueId();
-  //         });
-  //         if (newPosts.length > 0) {
-  //           watchedState.posts = _.concat(newPosts, watchedState.posts);
-  //         }
-  //       });
-  //   });
-  //   const promise = Promise.all(promises);
-  //   return promise.then(() => setTimeout(checkFeedsForUpdates, 5000));
-
-  // setTimeout(checkFeedsForUpdates, 5000);
-
-  // const promises = feeds.map((feed) => {
-  //   const feedId = feed.id;
-  //   const feedLink = proxifyUrl(feed.link);
-  //   return axios.get(feedLink)
-  //     .then((response) => {
-  //       const content = response.data.contents;
-  //       const feedData = parse(content);
-  //       const updatedPosts = feedData.feed.posts;
-
-  //       const currentPosts = state.posts.filter((post) => post.feedId === feedId);
-  //       const newPosts = _.differenceBy(updatedPosts, currentPosts, 'title');
-  //       newPosts.forEach((post) => {
-  //         post.feedId = feedId;
-  //         post.uniqueId = _.uniqueId();
-  //       });
-  //       if (newPosts.length > 0) {
-  //         watchedState.posts = _.concat(newPosts, watchedState.posts);
-  //       }
-  //     });
-  // }).finally(() => setTimeout(checkFeedsForUpdates, 5000));
-  // const promise = Promise.all(promises)
-  // return promises;
-  // };
-
   const checkFeedsForUpdates = () => {
     const { feeds } = state;
-    feeds.forEach((feed) => {
+    const promises = feeds.map((feed) => {
       const feedId = feed.id;
       const feedLink = proxifyUrl(feed.link);
       return axios.get(feedLink)
@@ -130,7 +79,8 @@ export default (i18n) => {
           }
         });
     });
-    setTimeout(checkFeedsForUpdates, 5000);
+    const promise = Promise.all(promises);
+    return promise.then(() => setTimeout(checkFeedsForUpdates, 5000));
   };
 
   form.addEventListener('submit', (e) => {
@@ -196,6 +146,6 @@ export default (i18n) => {
           watchedState.form.valid = false;
         });
     }
-    setTimeout(checkFeedsForUpdates, 5000);
+    checkFeedsForUpdates();
   });
 };
