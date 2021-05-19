@@ -3,7 +3,8 @@ import _ from 'lodash';
 
 const modalHandler = (watchedState, id) => {
   watchedState.modalWindowPostId = id;
-  watchedState.watchedPosts = [id].concat(watchedState.watchedPosts);
+  // watchedState.watchedPosts = [id].concat(watchedState.watchedPosts);
+  watchedState.watchedPosts = watchedState.watchedPosts.add(id);
 };
 
 const closeModal = (watchedState) => {
@@ -37,7 +38,8 @@ const renderModal = (watchedState, i18nInstance, modalForm) => {
 
 const renderWatchedStatuses = (watchedState) => {
   watchedState.posts.forEach((post) => {
-    if (_.includes(watchedState.watchedPosts, post.uniqueId)) {
+    if (watchedState.watchedPosts.has(post.uniqueId)) {
+    // if (_.includes(watchedState.watchedPosts, post.uniqueId)) {
       const currentPost = document.querySelector(`[data-id="${post.uniqueId}"]`);
       currentPost.classList.remove('font-weight-bold');
       currentPost.classList.add('font-weight-normal');

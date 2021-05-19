@@ -17,7 +17,7 @@ export default (i18n) => {
     feeds: [],
     posts: [],
     modalWindowPostId: null,
-    watchedPosts: [],
+    watchedPosts: new Set(),
   };
 
   yup.setLocale({
