@@ -120,6 +120,10 @@ export default (i18n) => {
           form.reset();
         })
         .catch((err) => {
+          if (err.isAxiosError) {
+            watchedState.form.error = 'feedback.rssParsingError';
+            return;
+          }
           console.log(err);
           console.log(err.message);
           switch (err.message) {
