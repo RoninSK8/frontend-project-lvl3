@@ -98,7 +98,11 @@ const renderFeeds = (state, i18nInstance) => {
     const feedDescription = feed.description;
     const li = document.createElement('li');
     li.classList.add('list-group-item');
-    li.innerHTML = `<h3>${feedTitle}</h3><p>${feedDescription}</p>`;
+    const h3 = document.createElement('h3');
+    h3.textContent = feedTitle;
+    const p = document.createElement('p');
+    p.textContent = feedDescription;
+    li.append(h3, p);
     ul.append(li);
   });
   feeds.append(ul);
@@ -112,8 +116,9 @@ const renderErrors = (state, i18nInstance, feedback) => {
   }
 };
 
-const renderForm = (value, formField, feedback) => {
-  if (value === true) {
+const renderForm = (state, formField, feedback) => {
+  const { valid } = state.form;
+  if (valid) {
     formField.classList.remove('is-invalid');
     feedback.classList.remove('text-danger');
     feedback.classList.add('text-success');
@@ -150,7 +155,7 @@ const processStateHandler = (i18nInstance, submitButton, feedback, state) => {
 
 export default (state, i18nInstance, formField, submitButton, modalForm) => {
   const feedback = document.querySelector('.feedback');
-  const watchedState = onChange(state, (path, value) => {
+  const watchedState = onChange(state, (path) => {
     switch (path) {
       case 'watchedPosts':
         renderWatchedStatuses(watchedState);
@@ -162,7 +167,7 @@ export default (state, i18nInstance, formField, submitButton, modalForm) => {
         processStateHandler(i18nInstance, submitButton, feedback, state);
         break;
       case 'form.valid':
-        renderForm(value, formField, feedback, i18nInstance, state);
+        renderForm(state, formField, feedback);
         break;
       case 'form.error':
         renderErrors(state, i18nInstance, feedback);
