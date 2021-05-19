@@ -121,7 +121,7 @@ export default (i18n) => {
         })
         .catch((err) => {
           if (err.isAxiosError) {
-            watchedState.form.error = 'feedback.rssParsingError';
+            watchedState.form.error = 'feedback.networkError';
             return;
           }
           console.log(err);
