@@ -67,15 +67,15 @@ export default (i18n) => {
           const content = response.data.contents;
           const feedData = parse(content);
           const updatedPosts = feedData.feed.posts;
-          const updatedPostsTitles = updatedPosts.map((post) => post.title);
+
           const currentPosts = state.posts.filter((post) => post.feedId === feedId);
-          const currentPostsTitles = currentPosts.map((post) => post.title);
-          const newPostTitles = _.difference(updatedPostsTitles, currentPostsTitles);
-          if (newPostTitles.length > 0) {
-            newPostTitles.forEach((title) => {
-              updatedPosts.filter((post) => post.title === title);
-            });
-            watchedState.posts = updatedPosts.concat(watchedState.posts);
+          const newPosts = _.differenceBy(updatedPosts, currentPosts, 'title');
+          newPosts.forEach((post) => {
+            post.feedId = feedId;
+            post.uniqueId = _.uniqueId();
+          });
+          if (newPosts.length > 0) {
+            watchedState.posts = newPosts.concat(watchedState.posts);
           }
         })
         .then(() => setTimeout(checkFeedsForUpdates, 5000));
