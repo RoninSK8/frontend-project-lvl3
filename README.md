@@ -26,6 +26,6 @@
 
 ##### RSS ленты для тестов:
 * https://ru.hexlet.io/lessons.rss
-* https://www.vedomosti.ru/rss/news
+* https://opensource.com/feed
 * Лента для тестов, обновляется каждые 10 сек 
   - http://lorem-rss.herokuapp.com/feed?unit=second&interval=10
