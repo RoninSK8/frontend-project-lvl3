@@ -135,9 +135,6 @@ export default (i18n) => {
             case 'no internet':
               watchedState.form.error = 'feedback.networkError';
               break;
-            // case 'Request failed with status code 500':
-            //   watchedState.form.error = 'feedback.networkError';
-            //   break;
             default:
               watchedState.form.error = 'feedback.networkError';
               break;
