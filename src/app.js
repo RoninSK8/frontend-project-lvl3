@@ -80,7 +80,7 @@ export default (i18n) => {
         });
     });
     const promise = Promise.all(promises);
-    return promise.then(() => setTimeout(checkFeedsForUpdates, 5000));
+    return promise.finally(() => setTimeout(checkFeedsForUpdates, 5000));
   };
 
   form.addEventListener('submit', (e) => {
