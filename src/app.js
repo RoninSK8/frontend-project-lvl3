@@ -99,12 +99,12 @@ export default (i18n) => {
           const content = response.data.contents;
           const feedData = parse(content);
           const feedLink = watchedState.form.field.input;
-          const feedTitle = feedData.feed.title;
-          const feedDescription = feedData.feed.description;
+          const { title } = feedData.feed;
+          const { description } = feedData.feed;
           const newFeed = {
             link: feedLink,
-            title: feedTitle,
-            description: feedDescription,
+            title,
+            description,
             id: _.uniqueId(),
           };
           const feedId = newFeed.id;
