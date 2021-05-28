@@ -131,20 +131,6 @@ export default (i18n) => {
           if (err.isParsingError) {
             watchedState.form.error = 'feedback.rssParsingError';
           }
-          // switch (err.message) {
-          //   case 'Error parsing XML':
-          //     watchedState.form.error = 'feedback.rssParsingError';
-          //     break;
-          //   case 'Network Error':
-          //     watchedState.form.errorr = 'feedback.networkError';
-          //     break;
-          //   case 'no internet':
-          //     watchedState.form.error = 'feedback.networkError';
-          //     break;
-          //   default:
-          //     watchedState.form.error = 'feedback.networkError';
-          //     break;
-          // }
           watchedState.form.processState = 'failed';
           watchedState.form.valid = false;
         });
