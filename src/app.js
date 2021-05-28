@@ -62,6 +62,13 @@ export default (i18n) => {
     }
   };
 
+  const addIds = (posts, feedId) => {
+    posts.forEach((post) => {
+      post.feedId = feedId;
+      post.id = _.uniqueId();
+    });
+  };
+
   const checkFeedsForUpdates = () => {
     const { feeds } = state;
     const promises = feeds.map((feed) => {
@@ -72,13 +79,9 @@ export default (i18n) => {
           const content = response.data.contents;
           const feedData = parse(content);
           const updatedPosts = feedData.posts;
-
           const currentPosts = state.posts.filter((post) => post.feedId === feedId);
           const newPosts = _.differenceBy(updatedPosts, currentPosts, 'title');
-          newPosts.forEach((post) => {
-            post.feedId = feedId;
-            post.id = _.uniqueId();
-          });
+          addIds(newPosts, feedId);
           if (newPosts.length > 0) {
             watchedState.posts = _.concat(newPosts, watchedState.posts);
           }
@@ -115,10 +118,7 @@ export default (i18n) => {
           const feedId = newFeed.id;
           watchedState.feeds = _.concat(newFeed, watchedState.feeds);
           const newPosts = feedData.posts;
-          newPosts.forEach((post) => {
-            post.feedId = feedId;
-            post.id = _.uniqueId();
-          });
+          addIds(newPosts, feedId);
           watchedState.posts = _.concat(newPosts, watchedState.posts);
           watchedState.form.processState = 'finished';
           form.reset();
