@@ -12,7 +12,7 @@ export default (i18n) => {
         input: '',
       },
       valid: false,
-      error: '',
+      error: null,
     },
     feeds: [],
     posts: [],
@@ -53,8 +53,13 @@ export default (i18n) => {
 
   const updateValidationState = (schema) => {
     const error = validate(watchedState.form.field, schema);
-    watchedState.form.valid = _.isEqual(error, '');
-    watchedState.form.error = error;
+    if (error.length === '') {
+      watchedState.form.error = null;
+      watchedState.form.valid = true;
+    } else {
+      watchedState.form.valid = _.isEqual(error, '');
+      watchedState.form.error = error;
+    }
   };
 
   const checkFeedsForUpdates = () => {
@@ -123,8 +128,6 @@ export default (i18n) => {
             watchedState.form.error = 'feedback.networkError';
             return;
           }
-          console.log(err);
-          console.log(err.message);
           switch (err.message) {
             case 'Error parsing XML':
               watchedState.form.error = 'feedback.rssParsingError';

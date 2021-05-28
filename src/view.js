@@ -109,7 +109,7 @@ const renderFeeds = (state, i18nInstance) => {
 };
 
 const renderErrors = (state, i18nInstance, feedback) => {
-  if (_.isEqual(state.form.error, '')) {
+  if (state.form.error === null) {
     feedback.innerHTML = '';
   } else {
     feedback.innerHTML = i18nInstance.t(state.form.error);
