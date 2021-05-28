@@ -1,5 +1,4 @@
 import onChange from 'on-change';
-import _ from 'lodash';
 
 const modalHandler = (watchedState, id) => {
   watchedState.modalWindowPostId = id;
