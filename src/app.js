@@ -108,13 +108,13 @@ export default (i18n) => {
             id: _.uniqueId(),
           };
           const feedId = newFeed.id;
-          watchedState.feeds = _.concat(newFeed, watchedState.feeds);
+          watchedState.feeds = [newFeed].concat(watchedState.feeds);
           const newPosts = feedData.feed.posts;
           newPosts.forEach((post) => {
             post.feedId = feedId;
             post.id = _.uniqueId();
           });
-          watchedState.posts = _.concat(newPosts, watchedState.posts);
+          watchedState.posts = newPosts.concat(watchedState.posts);
           watchedState.form.processState = 'finished';
           form.reset();
         })
