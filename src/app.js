@@ -11,7 +11,7 @@ export default (i18n) => {
       field: {
         input: '',
       },
-      valid: '',
+      valid: false,
       error: '',
     },
     feeds: [],
@@ -72,7 +72,7 @@ export default (i18n) => {
           const newPosts = _.differenceBy(updatedPosts, currentPosts, 'title');
           newPosts.forEach((post) => {
             post.feedId = feedId;
-            post.uniqueId = _.uniqueId();
+            post.id = _.uniqueId();
           });
           if (newPosts.length > 0) {
             watchedState.posts = _.concat(newPosts, watchedState.posts);
@@ -112,7 +112,7 @@ export default (i18n) => {
           const newPosts = feedData.feed.posts;
           newPosts.forEach((post) => {
             post.feedId = feedId;
-            post.uniqueId = _.uniqueId();
+            post.id = _.uniqueId();
           });
           watchedState.posts = newPosts.concat(watchedState.posts);
           watchedState.form.processState = 'finished';

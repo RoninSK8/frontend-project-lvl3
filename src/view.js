@@ -12,7 +12,7 @@ const closeModal = (watchedState) => {
 const renderModal = (watchedState, i18nInstance, modalForm) => {
   const postId = watchedState.modalWindowPostId;
 
-  const currentPost = watchedState.posts.filter((post) => post.uniqueId === postId)[0];
+  const currentPost = watchedState.posts.filter((post) => post.id === postId)[0];
   const modalTitle = modalForm.querySelector('.modal-title');
   const modalDescription = modalForm.querySelector('.modal-body');
   const goToFullArticleButton = modalForm.querySelector('.full-article');
@@ -37,8 +37,8 @@ const renderModal = (watchedState, i18nInstance, modalForm) => {
 
 const renderWatchedStatuses = (watchedState) => {
   watchedState.posts.forEach((post) => {
-    if (watchedState.watchedPosts.has(post.uniqueId)) {
-      const currentPost = document.querySelector(`[data-id="${post.uniqueId}"]`);
+    if (watchedState.watchedPosts.has(post.id)) {
+      const currentPost = document.querySelector(`[data-id="${post.id}"]`);
       currentPost.classList.remove('font-weight-bold');
       currentPost.classList.add('font-weight-normal');
     }
@@ -57,13 +57,13 @@ const renderPosts = (watchedState, i18nInstance) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group');
   watchedState.posts.forEach((post) => {
-    const { title, link, uniqueId } = post;
+    const { title, link, id } = post;
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start');
     const a = document.createElement('a');
     a.setAttribute('href', `${link}`);
     a.classList.add('font-weight-bold');
-    a.setAttribute('data-id', uniqueId);
+    a.setAttribute('data-id', id);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
     a.textContent = title;
@@ -75,7 +75,7 @@ const renderPosts = (watchedState, i18nInstance) => {
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', 'modal');
     button.textContent = i18nInstance.t('watchButton');
-    button.addEventListener('click', () => modalHandler(watchedState, uniqueId));
+    button.addEventListener('click', () => modalHandler(watchedState, id));
     li.append(button);
     ul.append(li);
   });
