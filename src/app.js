@@ -99,22 +99,22 @@ export default (i18n) => {
           const content = response.data.contents;
           const feedData = parse(content);
           const feedLink = watchedState.form.field.input;
-          const feedTitle = feedData.feed.title;
-          const feedDescription = feedData.feed.description;
+          const { title } = feedData.feed;
+          const { description } = feedData.feed.description;
           const newFeed = {
             link: feedLink,
-            title: feedTitle,
-            description: feedDescription,
+            title,
+            description,
             id: _.uniqueId(),
           };
           const feedId = newFeed.id;
-          watchedState.feeds = [newFeed].concat(watchedState.feeds);
+          watchedState.feeds = _.concat(newFeed, watchedState.feeds);
           const newPosts = feedData.feed.posts;
           newPosts.forEach((post) => {
             post.feedId = feedId;
             post.id = _.uniqueId();
           });
-          watchedState.posts = newPosts.concat(watchedState.posts);
+          watchedState.posts = _.concat(newPosts, watchedState.posts);
           watchedState.form.processState = 'finished';
           form.reset();
         })
