@@ -16,11 +16,9 @@ export default (content) => {
     }));
 
   return {
-    feed: {
-      link,
-      title,
-      description,
-      posts,
-    },
+    link,
+    title,
+    description,
+    posts,
   };
 };

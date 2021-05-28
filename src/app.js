@@ -66,7 +66,7 @@ export default (i18n) => {
         .then((response) => {
           const content = response.data.contents;
           const feedData = parse(content);
-          const updatedPosts = feedData.feed.posts;
+          const updatedPosts = feedData.posts;
 
           const currentPosts = state.posts.filter((post) => post.feedId === feedId);
           const newPosts = _.differenceBy(updatedPosts, currentPosts, 'title');
@@ -99,8 +99,8 @@ export default (i18n) => {
           const content = response.data.contents;
           const feedData = parse(content);
           const feedLink = watchedState.form.field.input;
-          const { title } = feedData.feed;
-          const { description } = feedData.feed;
+          const { title } = feedData;
+          const { description } = feedData;
           const newFeed = {
             link: feedLink,
             title,
@@ -109,7 +109,7 @@ export default (i18n) => {
           };
           const feedId = newFeed.id;
           watchedState.feeds = _.concat(newFeed, watchedState.feeds);
-          const newPosts = feedData.feed.posts;
+          const newPosts = feedData.posts;
           newPosts.forEach((post) => {
             post.feedId = feedId;
             post.id = _.uniqueId();
