@@ -53,7 +53,7 @@ export default (i18n) => {
 
   const updateValidationState = (schema) => {
     const error = validate(watchedState.form.field, schema);
-    if (error.length === '') {
+    if (error === '') {
       watchedState.form.error = null;
       watchedState.form.valid = true;
     } else {
