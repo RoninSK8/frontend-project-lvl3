@@ -57,8 +57,8 @@ export default (i18n) => {
       watchedState.form.error = null;
       watchedState.form.valid = true;
     } else {
-      watchedState.form.valid = _.isEqual(error, '');
       watchedState.form.error = error;
+      watchedState.form.valid = false;
     }
   };
 
