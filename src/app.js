@@ -24,11 +24,12 @@ export default (i18n) => {
     string: {
       required: 'feedback.fieldRequired',
       url: 'feedback.urlNotValid',
+      notOneOf: 'feedback.alreadyExists',
     },
   });
   const initializeSchema = (feedLinks) => {
     const initializedSchema = yup.object().shape({
-      input: yup.string().required().url().notOneOf(feedLinks, 'feedback.alreadyExists'),
+      input: yup.string().required().url().notOneOf(feedLinks),
     });
     return initializedSchema;
   };
