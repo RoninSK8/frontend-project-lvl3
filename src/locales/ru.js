@@ -8,6 +8,7 @@ export default {
       urlNotValid: 'Ссылка должна быть валидным URL',
       rssParsingError: 'Ресурс не содержит валидный RSS',
       networkError: 'Ошибка сети',
+      unknownError: 'неизвестная ошибка',
     },
     modal: {
       readFull: 'Читать полностью',
