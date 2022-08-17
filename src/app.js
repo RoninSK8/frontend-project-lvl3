@@ -41,7 +41,14 @@ export default (i18n) => {
       return e.message;
     }
   };
-  const proxifyUrl = (url) => new URL(`https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${url}`);
+
+  const proxifyUrl = (url) => {
+    const proxyUrl = 'https://allorigins.hexlet.app/get';
+    const proxiedUrl = new URL(proxyUrl);
+    proxiedUrl.searchParams.set('disableCache', 'true');
+    proxiedUrl.searchParams.set('url', url);
+    return proxiedUrl;
+  };
 
   const form = document.querySelector('form');
   const formField = document.querySelector('.form-control');
@@ -130,6 +137,8 @@ export default (i18n) => {
           }
           if (err.isParsingError) {
             watchedState.form.error = 'feedback.rssParsingError';
+          } else {
+            watchedState.form.error = 'feedback.unknownError';
           }
           watchedState.form.processState = 'failed';
           watchedState.form.valid = false;
